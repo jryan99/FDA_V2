@@ -1,45 +1,39 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
+const router = express.Router();
 
-const app = express();
-const port = 3005;
+// Connect to SQLite database
+const db = new sqlite3.Database('./myfdx.db', (err) => {
+  if (err) {
+    console.error('Database connection error:', err.message);
+  } else {
+    console.log('Connected to SQLite database');
+  }
+});
 
-// Open your SQLite database
-const db = new sqlite3.Database('./myfdx.db');
-
-// Middleware to parse JSON bodies (if needed)
-app.use(express.json());
-
-// /accounts endpoint
-app.get('/accounts', (req, res) => {
+// GET /accounts endpoint
+router.get('/', (req, res) => {
   db.all('SELECT * FROM accounts', [], (err, rows) => {
     if (err) {
-      return res.status(500).json({ error: 'Database error', details: err.message });
+      return res.status(500).json({ 
+        error: 'Database error', 
+        details: err.message 
+      });
     }
-
-    // Parse balances and owners fields from JSON strings
+    
+    // Parse JSON fields if needed
     const accounts = rows.map(row => ({
       account_id: row.account_id,
-      balances: JSON.parse(row.balances),
-      mask: row.mask,
       name: row.name,
-      official_name: row.official_name,
-      subtype: row.subtype,
+      balances: row.balances ? JSON.parse(row.balances) : null,
+      owners: row.owners ? JSON.parse(row.owners) : null,
       type: row.type,
-      verification_status: row.verification_status,
-      institution_id: row.institution_id,
-      owners: row.owners ? JSON.parse(row.owners) : [],
-      limit: row.credit_limit,
-      iso_currency_code: row.iso_currency_code,
-      unofficial_currency_code: row.unofficial_currency_code
+      created_at: row.created_at,
+      updated_at: row.updated_at
     }));
-
-    res.json({ accounts });
+    
+    res.json(accounts);
   });
 });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Accounts API listening at http://localhost:${port}/accounts`);
-});
-
+module.exports = router;
