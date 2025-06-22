@@ -1,0 +1,3 @@
+account_id,name,balances,owners,type,subtype,mask,official_name,created_at,updated_at
+BxBXxLj1m4HMXBm9WZZmCWVbPjX16EHwv99vp,Plaid Checking,"{""available"":110.94,""current"":110.94,""iso_currency_code"":""USD"",""limit"":null,""unofficial_currency_code"":null}",,depository,checking,0000,Plaid Gold Standard 0% Interest Checking,2024-06-20,2024-06-20
+pmbxkE9jN3f4x7r5vV5ZfKJz9QkP3W1wVv6pV,Plaid Savings,"{""available"":200.12,""current"":200.12,""iso_currency_code"":""USD"",""limit"":null,""unofficial_currency_code"":null}",,depository,savings,1111,Plaid Silver Standard Savings,2024-06-20,2024-06-20

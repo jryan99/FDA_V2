@@ -1,28 +1,36 @@
 const express = require('express');
-const app = express();
 const bodyParser = require('body-parser');
 const plaid = require('plaid');
 
-// Add this line to import accounts router
+// Import the accounts router
 const accountsRouter = require('./accounts-api');
+
+const app = express();
 
 // Middleware to parse JSON
 app.use(bodyParser.json());
 
-// Mount accounts router
-app.use('/accounts', accountsRouter);  // Add this line
+// Mount the accounts router at /accounts
+app.use('/accounts', accountsRouter);
 
-// Existing Plaid endpoint
+// Example Plaid endpoint (leave as is if you use it)
 app.post('/api/public_token', async (req, res) => {
   try {
     const publicToken = req.body.public_token;
-    // ... rest of your Plaid code ...
+    // ... your Plaid logic here ...
+    res.json({ success: true });
   } catch (err) {
     console.error(err);
     res.status(401).json({ error: err.message || "Unauthorized" });
   }
 });
 
+// Optional: Root route for health check
+app.get('/', (req, res) => {
+  res.send('API server is running');
+});
+
+// Start the server on port 3001
 app.listen(3001, () => {
   console.log("Backend running on http://localhost:3001");
 });
