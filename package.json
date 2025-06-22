@@ -4,6 +4,7 @@
   "description": "Financial Data Aggregator full stack app",
   "main": "oidc_server.mjs",
   "scripts": {
+    "test": "jest",
     "start:oidc": "node oidc_server.mjs",
     "start:api": "node accounts-api.js",
     "start:frontend": "npm --prefix src start",
@@ -35,6 +36,8 @@
     "oidc-provider": "^9.1.3"
   },
   "devDependencies": {
-    "nodemon": "^3.0.0"
+    "jest": "^30.0.2",
+    "nodemon": "^3.0.0",
+    "supertest": "^7.1.1"
   }
 }
