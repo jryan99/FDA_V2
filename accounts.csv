@@ -1,3 +1,22 @@
-account_id,name,balances,owners,type,subtype,mask,official_name,created_at,updated_at
-BxBXxLj1m4HMXBm9WZZmCWVbPjX16EHwv99vp,Plaid Checking,"{""available"":110.94,""current"":110.94,""iso_currency_code"":""USD"",""limit"":null,""unofficial_currency_code"":null}",,depository,checking,0000,Plaid Gold Standard 0% Interest Checking,2024-06-20,2024-06-20
-pmbxkE9jN3f4x7r5vV5ZfKJz9QkP3W1wVv6pV,Plaid Savings,"{""available"":200.12,""current"":200.12,""iso_currency_code"":""USD"",""limit"":null,""unofficial_currency_code"":null}",,depository,savings,1111,Plaid Silver Standard Savings,2024-06-20,2024-06-20
+account_id,customer_id,account_type,account_number,status,balance,currency,created_at
+101,1,checking,11100001,active,5023.45,USD,2022-01-01
+102,2,savings,22200002,active,12000.00,USD,2022-01-03
+103,3,creditcard,33300003,active,-230.55,USD,2022-01-05
+104,4,loan,44400004,active,-5000.00,USD,2022-01-07
+105,5,investment,55500005,active,15000.00,USD,2022-01-09
+106,6,checking,66600006,active,3200.00,USD,2022-01-11
+107,7,savings,77700007,active,8500.00,USD,2022-01-13
+108,8,creditcard,88800008,active,-120.25,USD,2022-01-15
+109,9,loan,99900009,active,-7000.00,USD,2022-01-17
+110,10,investment,110000010,active,20000.00,USD,2022-01-19
+111,11,checking,111100011,active,4100.00,USD,2022-01-21
+112,12,savings,122000012,active,9500.00,USD,2022-01-23
+113,13,creditcard,133000013,active,-430.75,USD,2022-01-25
+114,14,loan,144000014,active,-6000.00,USD,2022-01-27
+115,15,investment,155000015,active,18000.00,USD,2022-01-29
+116,16,checking,166000016,active,2900.00,USD,2022-01-31
+117,17,savings,177000017,active,10500.00,USD,2022-02-02
+118,18,creditcard,188000018,active,-320.10,USD,2022-02-04
+119,19,loan,199000019,active,-8000.00,USD,2022-02-06
+120,20,investment,200000020,active,25000.00,USD,2022-02-08
+

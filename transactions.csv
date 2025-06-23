@@ -1,0 +1,22 @@
+transaction_id,account_id,amount,currency,description,posted_timestamp
+1001,101,-45.67,USD,Grocery Store,2022-05-01
+1002,101,-120.00,USD,Online Shopping,2022-05-03
+1003,102,200.00,USD,Interest,2022-05-04
+1004,103,-50.00,USD,Gas Station,2022-05-05
+1005,104,500.00,USD,Loan Payment,2022-05-06
+1006,105,1000.00,USD,Stock Dividend,2022-05-07
+1007,106,-75.00,USD,Restaurant,2022-05-08
+1008,107,50.00,USD,Deposit,2022-05-09
+1009,108,-30.00,USD,Subscription,2022-05-10
+1010,109,700.00,USD,Loan Disbursement,2022-05-11
+1011,110,2000.00,USD,Investment Return,2022-05-12
+1012,111,-60.00,USD,ATM Withdrawal,2022-05-13
+1013,112,300.00,USD,Interest,2022-05-14
+1014,113,-120.00,USD,Online Shopping,2022-05-15
+1015,114,600.00,USD,Loan Payment,2022-05-16
+1016,115,1800.00,USD,Stock Dividend,2022-05-17
+1017,116,-90.00,USD,Restaurant,2022-05-18
+1018,117,100.00,USD,Deposit,2022-05-19
+1019,118,-40.00,USD,Subscription,2022-05-20
+1020,119,800.00,USD,Loan Disbursement,2022-05-21
+

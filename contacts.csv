@@ -1,0 +1,22 @@
+contact_id,account_id,type,value
+301,101,email,acc101@email.com
+302,102,phone,555-1020
+303,103,address,"123 Main St, City, State"
+304,104,email,acc104@email.com
+305,105,phone,555-1050
+306,106,address,"456 Oak Ave, City, State"
+307,107,email,acc107@email.com
+308,108,phone,555-1080
+309,109,address,"789 Pine Rd, City, State"
+310,110,email,acc110@email.com
+311,111,phone,555-1110
+312,112,address,"234 Maple St, City, State"
+313,113,email,acc113@email.com
+314,114,phone,555-1140
+315,115,address,"567 Cedar Ave, City, State"
+316,116,email,acc116@email.com
+317,117,phone,555-1170
+318,118,address,"890 Birch Blvd, City, State"
+319,119,email,acc119@email.com
+320,120,phone,555-1200
+
