@@ -1,15 +1,10 @@
--- Enable foreign keys
-PRAGMA foreign_keys = ON;
-
--- Drop existing tables (if needed)
+DROP TABLE IF EXISTS customers;
+DROP TABLE IF EXISTS accounts;
+DROP TABLE IF EXISTS statements;
 DROP TABLE IF EXISTS payment_networks;
 DROP TABLE IF EXISTS account_contacts;
-DROP TABLE IF EXISTS statements;
 DROP TABLE IF EXISTS transactions;
-DROP TABLE IF EXISTS accounts;
-DROP TABLE IF EXISTS customers;
 
--- Create tables
 CREATE TABLE customers (
   customer_id INTEGER PRIMARY KEY,
   first_name TEXT NOT NULL,
@@ -64,25 +59,7 @@ CREATE TABLE payment_networks (
   FOREIGN KEY (account_id) REFERENCES accounts(account_id)
 );
 
--- Import CSV data
 .mode csv
+.separator ","
 .import customers.csv customers
 .import accounts.csv accounts
-.import transactions.csv transactions
-.import statements.csv statements
-.import account_contacts.csv account_contacts
-.import payment_networks.csv payment_networks
-
--- Verify counts
-SELECT 'Customers' AS table, COUNT(*) AS count FROM customers
-UNION ALL
-SELECT 'Accounts', COUNT(*) FROM accounts
-UNION ALL
-SELECT 'Transactions', COUNT(*) FROM transactions
-UNION ALL
-SELECT 'Statements', COUNT(*) FROM statements
-UNION ALL
-SELECT 'Account Contacts', COUNT(*) FROM account_contacts
-UNION ALL
-SELECT 'Payment Networks', COUNT(*) FROM payment_networks;
-

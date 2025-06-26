@@ -1,3 +1,5 @@
+SQLite3 myfdx.db
+
 -- Enable foreign keys
 PRAGMA foreign_keys = ON;
 
@@ -6,7 +8,6 @@ DROP TABLE IF EXISTS payment_networks;
 DROP TABLE IF EXISTS account_contacts;
 DROP TABLE IF EXISTS statements;
 DROP TABLE IF EXISTS transactions;
-DROP TABLE IF EXISTS accounts;
 DROP TABLE IF EXISTS customers;
 
 -- Create tables
@@ -16,18 +17,6 @@ CREATE TABLE customers (
   last_name TEXT NOT NULL,
   email TEXT NOT NULL UNIQUE,
   created_at TEXT NOT NULL
-);
-
-CREATE TABLE accounts (
-  account_id INTEGER PRIMARY KEY,
-  customer_id INTEGER NOT NULL,
-  account_type TEXT NOT NULL,
-  account_number TEXT NOT NULL UNIQUE,
-  status TEXT NOT NULL,
-  balance REAL NOT NULL,
-  currency TEXT NOT NULL,
-  created_at TEXT NOT NULL,
-  FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
 );
 
 CREATE TABLE transactions (
@@ -67,7 +56,6 @@ CREATE TABLE payment_networks (
 -- Import CSV data
 .mode csv
 .import customers.csv customers
-.import accounts.csv accounts
 .import transactions.csv transactions
 .import statements.csv statements
 .import account_contacts.csv account_contacts

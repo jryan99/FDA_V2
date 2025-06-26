@@ -1,0 +1,131 @@
+#!/bin/bash
+DB_NAME="fdx.db"
+
+# Create database schema
+sqlite3 "$DB_NAME" <<EOSQL
+PRAGMA foreign_keys = ON;
+
+DROP TABLE IF EXISTS payment_networks;
+DROP TABLE IF EXISTS account_contacts;
+DROP TABLE IF EXISTS statements;
+DROP TABLE IF EXISTS transactions;
+DROP TABLE IF EXISTS accounts;
+DROP TABLE IF EXISTS customers;
+
+CREATE TABLE customers (
+  customer_id INTEGER PRIMARY KEY,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
+  email TEXT NOT NULL UNIQUE,
+  created_at TEXT NOT NULL
+);
+
+CREATE TABLE accounts (
+  account_id INTEGER PRIMARY KEY,
+  customer_id INTEGER NOT NULL,
+  account_number TEXT NOT NULL UNIQUE,
+  account_type TEXT NOT NULL,
+  balance REAL NOT NULL,
+  created_at TEXT NOT NULL,
+  FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+);
+
+CREATE TABLE transactions (
+  transaction_id INTEGER PRIMARY KEY,
+  account_id INTEGER NOT NULL,
+  amount REAL NOT NULL,
+  type TEXT NOT NULL,
+  description TEXT,
+  created_at TEXT NOT NULL,
+  FOREIGN KEY (account_id) REFERENCES accounts(account_id)
+);
+
+CREATE TABLE statements (
+  statement_id INTEGER PRIMARY KEY,
+  account_id INTEGER NOT NULL,
+  start_date TEXT NOT NULL,
+  end_date TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  FOREIGN KEY (account_id) REFERENCES accounts(account_id)
+);
+
+CREATE TABLE account_contacts (
+  contact_id INTEGER PRIMARY KEY,
+  account_id INTEGER NOT NULL,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  phone TEXT,
+  created_at TEXT NOT NULL,
+  FOREIGN KEY (account_id) REFERENCES accounts(account_id)
+);
+
+CREATE TABLE payment_networks (
+  network_id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  description TEXT
+);
+EOSQL
+
+echo "Created All Tables " 
+
+
+# Function to validate and import CSV
+import_table() {
+  local csv_file="$1"
+  local table_name="$2"
+  local required_columns="$3"
+  
+  if [ ! -f "$csv_file" ]; then
+    echo "⚠️  File not found: $csv_file. Skipping..."
+    return 1
+  fi
+
+  # Validate CSV structure
+  actual_cols=$(head -1 "$csv_file" | sed 's/,/ /g' | wc -w)
+  if [ "$actual_cols" -ne "$required_columns" ]; then
+    echo "❌ Structure error in $csv_file: Expected $required_columns columns, found $actual_cols"
+    return 1
+  fi
+
+  # Import with error capture
+  echo "Importing $csv_file to $table_name..."
+  sqlite3 "$DB_NAME" <<IMPORT_EOF
+.mode csv
+.separator ","
+.import --skip 1 "$csv_file" "$table_name"
+IMPORT_EOF
+
+  # Check import status
+  if [ $? -ne 0 ]; then
+    echo "❌ Import failed for $table_name"
+    sqlite3 "$DB_NAME" "SELECT COUNT(*) FROM $table_name;" | grep -q '^0$' && \
+      echo "⚠️  No data imported into $table_name"
+    return 1
+  fi
+
+  # Post-import validation
+  imported_count=$(sqlite3 "$DB_NAME" "SELECT COUNT(*) FROM $table_name;")
+  echo "✅ $table_name: Imported $imported_count records"
+}
+
+# Import data with validation
+import_table "customers.csv" "customers" 5
+import_table "accounts.csv" "accounts" 7
+import_table "transactions.csv" "transactions" 6
+import_table "statements.csv" "statements" 5
+import_table "account_contacts.csv" "account_contacts" 6
+import_table "payment_networks.csv" "payment_networks" 3
+
+# Final verification
+echo -e "\nDatabase Verification:"
+sqlite3 "$DB_NAME" <<VERIFY_EOF
+.tables
+SELECT 
+  (SELECT COUNT(*) FROM customers) AS customers,
+  (SELECT COUNT(*) FROM accounts) AS accounts,
+  (SELECT COUNT(*) FROM transactions) AS transactions,
+  (SELECT COUNT(*) FROM statements) AS statements,
+  (SELECT COUNT(*) FROM account_contacts) AS contacts,
+  (SELECT COUNT(*) FROM payment_networks) AS payment_networks;
+VERIFY_EOF
+
