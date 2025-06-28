@@ -1,108 +1,98 @@
-// fdx-api.js
-
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
-
 const app = express();
+const db = new sqlite3.Database('./fdx.db');
 app.use(express.json());
+app.use(express.static('public'));
 
-// Utility: open DB connection per request
-function getDb() {
-  return new sqlite3.Database(path.join(__dirname, 'fdx.db'));
-}
-
-// Health check endpoint
-app.get('/health', (req, res) => {
-  res.json({ status: 'FDX API is running' });
-});
-
-// FDX: Get all customer data (accounts, transactions, statements) by customer_id
-app.get('/fdx/customer/:customerId', (req, res) => {
-  const customerId = req.params.customerId;
-  const db = getDb();
-
-  // Get customer info
-  db.get(
-    `SELECT customer_id, first_name, last_name, email, created_at
-     FROM customers WHERE customer_id = ?`,
+// Get all accounts for a customer
+app.get('/accounts', (req, res) => {
+  const customerId = req.query.customerId;
+  if (!customerId) return res.status(400).json({error: 'customerId required'});
+  db.all(
+    'SELECT * FROM accounts WHERE customer_id = ?',
     [customerId],
-    (err, customer) => {
-      if (err) {
-        db.close();
-        return res.status(500).json({ error: err.message });
-      }
-      if (!customer) {
-        db.close();
-        return res.status(404).json({ error: 'Customer not found' });
-      }
-
-      // Get all accounts for the customer
-      db.all(
-        `SELECT * FROM accounts WHERE customer_id = ?`,
-        [customerId],
-        (err, accounts) => {
-          if (err) {
-            db.close();
-            return res.status(500).json({ error: err.message });
-          }
-
-          // For each account, get transactions and statements
-          const accountIds = accounts.map(acc => acc.account_id);
-          if (accountIds.length === 0) {
-            db.close();
-            return res.json({ customer, accounts: [] });
-          }
-
-          // Helper to run multi-account queries
-          const placeholders = accountIds.map(() => '?').join(',');
-
-          db.all(
-            `SELECT * FROM transactions WHERE account_id IN (${placeholders})`,
-            accountIds,
-            (err, transactions) => {
-              if (err) {
-                db.close();
-                return res.status(500).json({ error: err.message });
-              }
-
-              db.all(
-                `SELECT * FROM statements WHERE account_id IN (${placeholders})`,
-                accountIds,
-                (err, statements) => {
-                  db.close();
-                  if (err) {
-                    return res.status(500).json({ error: err.message });
-                  }
-
-                  // Structure the response: nest transactions and statements under each account
-                  const accountsWithDetails = accounts.map(acc => ({
-                    ...acc,
-                    transactions: transactions.filter(t => t.account_id === acc.account_id),
-                    statements: statements.filter(s => s.account_id === acc.account_id)
-                  }));
-
-                  res.json({
-                    customer,
-                    accounts: accountsWithDetails
-                  });
-                }
-              );
-            }
-          );
-        }
-      );
+    (err, rows) => {
+      if (err) return res.status(500).json({error: err.message});
+      res.json({accounts: rows});
     }
   );
 });
 
-// Start the server (only if run directly)
-if (require.main === module) {
-  const PORT = process.env.PORT || 3000;
-  app.listen(PORT, () => {
-    console.log(`FDX API server running on port ${PORT}`);
-  });
-}
+// Get account details by accountId
+app.get('/accounts/:accountId', (req, res) => {
+  const accountId = req.params.accountId;
+  db.get(
+    'SELECT * FROM accounts WHERE account_id = ?',
+    [accountId],
+    (err, row) => {
+      if (err) return res.status(500).json({error: err.message});
+      if (!row) return res.status(404).json({error: 'Account not found'});
+      res.json(row);
+    }
+  );
+});
 
-module.exports = app;
+// Get transactions for an account
+app.get('/accounts/:accountId/transactions', (req, res) => {
+  const accountId = req.params.accountId;
+  db.all(
+    'SELECT * FROM transactions WHERE account_id = ?',
+    [accountId],
+    (err, rows) => {
+      if (err) return res.status(500).json({error: err.message});
+      res.json({transactions: rows});
+    }
+  );
+});
+
+// Get contact info for an account
+app.get('/accounts/:accountId/contact', (req, res) => {
+  const accountId = req.params.accountId;
+  db.all(
+    'SELECT * FROM account_contacts WHERE account_id = ?',
+    [accountId],
+    (err, rows) => {
+      if (err) return res.status(500).json({error: err.message});
+      res.json({contacts: rows});
+    }
+  );
+});
+
+// Get payment networks for an account
+app.get('/accounts/:accountId/payment-networks', (req, res) => {
+  const accountId = req.params.accountId;
+  db.all(
+    'SELECT * FROM payment_networks WHERE account_id = ?',
+    [accountId],
+    (err, rows) => {
+      if (err) return res.status(500).json({error: err.message});
+      res.json({payment_networks: rows});
+    }
+  );
+});
+
+// Get statements for an account
+app.get('/accounts/:accountId/statements', (req, res) => {
+  const accountId = req.params.accountId;
+  db.all(
+    'SELECT * FROM statements WHERE account_id = ?',
+    [accountId],
+    (err, rows) => {
+      if (err) return res.status(500).json({error: err.message});
+      res.json({statements: rows});
+    }
+  );
+});
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({status: 'FDX API is running'});
+});
+
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`FDX API server running on port ${PORT}`);
+});
 

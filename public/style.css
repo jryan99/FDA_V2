@@ -1,0 +1,83 @@
+body {
+  background: #f5f6fa;
+  font-family: "Segoe UI", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+.header {
+  background: #002663;
+  color: #fff;
+  padding: 1.5em 2em;
+  font-size: 1.8em;
+  font-weight: bold;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 8px #0001;
+}
+.container {
+  max-width: 600px;
+  margin: 2em auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 24px #0002;
+  padding: 2em 2em 3em 2em;
+}
+h2 {
+  color: #002663;
+  margin-top: 0;
+}
+label {
+  font-weight: 600;
+  margin-top: 1em;
+  display: block;
+}
+select, input[type="number"] {
+  width: 100%;
+  padding: 0.6em;
+  margin-top: 0.4em;
+  margin-bottom: 1em;
+  border: 1px solid #bfc9d1;
+  border-radius: 5px;
+  font-size: 1.1em;
+  background: #f5f6fa;
+}
+button {
+  background: #0071e3;
+  color: #fff;
+  border: none;
+  padding: 0.8em 2em;
+  border-radius: 5px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 1em;
+  transition: background 0.2s;
+}
+button:hover {
+  background: #0056b3;
+}
+.instructions {
+  background: #e8f0fe;
+  border-left: 4px solid #0071e3;
+  padding: 1em;
+  margin-bottom: 2em;
+  border-radius: 5px;
+  color: #002663;
+}
+.result {
+  margin-top: 2em;
+  background: #f5f6fa;
+  border-radius: 5px;
+  padding: 1em;
+  font-size: 1em;
+  color: #222;
+  white-space: pre-wrap;
+  word-break: break-all;
+  border: 1px solid #e0e4ea;
+}
+.footer {
+  text-align: center;
+  color: #888;
+  margin-top: 3em;
+  font-size: 0.95em;
+}
+

@@ -2,53 +2,57 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Link Your Bank Account | Openbank - Financial Data Aggregator</title>
+  <title>Fidelity Wealth Management | Link Your Bank Account</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
-      background: #f5f6fa;
+      background: #032616;
       font-family: "Segoe UI", Arial, sans-serif;
       margin: 0;
       padding: 0;
     }
     .header {
-      background: #002663;
+      background: #06402B;
       color: #fff;
       padding: 1.5em 2em;
       font-size: 1.8em;
       font-weight: bold;
       letter-spacing: 1px;
-      box-shadow: 0 2px 8px #0001;
+      box-shadow: 0 2px 8px #0002;
+      border-bottom: 4px solid #228B22;
     }
     .container {
-      max-width: 600px;
+      max-width: 700px;
       margin: 2em auto;
-      background: #fff;
+      background: #1B3A2B;
       border-radius: 10px;
-      box-shadow: 0 4px 24px #0002;
+      box-shadow: 0 4px 24px #0004;
       padding: 2em 2em 3em 2em;
+      color: #fff;
     }
     h2 {
-      color: #002663;
+      color: #228B22;
       margin-top: 0;
     }
     label {
       font-weight: 600;
       margin-top: 1em;
       display: block;
+      color: #fff;
     }
     select, input[type="number"] {
       width: 100%;
       padding: 0.6em;
       margin-top: 0.4em;
       margin-bottom: 1em;
-      border: 1px solid #bfc9d1;
+      border: 1px solid #228B22;
       border-radius: 5px;
       font-size: 1.1em;
-      background: #f5f6fa;
+      background: #14301E;
+      color: #fff;
     }
     button {
-      background: #0071e3;
+      background: #228B22;
       color: #fff;
       border: none;
       padding: 0.8em 2em;
@@ -60,38 +64,69 @@
       transition: background 0.2s;
     }
     button:hover {
-      background: #0056b3;
+      background: #06402B;
     }
     .instructions {
-      background: #e8f0fe;
-      border-left: 4px solid #0071e3;
+      background: #14301E;
+      border-left: 4px solid #228B22;
       padding: 1em;
       margin-bottom: 2em;
       border-radius: 5px;
-      color: #002663;
+      color: #fff;
     }
     .result {
       margin-top: 2em;
-      background: #f5f6fa;
+      background: #0F2014;
       border-radius: 5px;
       padding: 1em;
       font-size: 1em;
-      color: #222;
-      white-space: pre-wrap;
-      word-break: break-all;
-      border: 1px solid #e0e4ea;
+      color: #fff;
+      border: 1px solid #228B22;
+      overflow-x: auto;
+    }
+    .account-table, .transaction-table, .contact-table, .network-table, .statement-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2em;
+      background: #183624;
+    }
+    .account-table th, .transaction-table th, .contact-table th, .network-table th, .statement-table th {
+      background: #228B22;
+      color: #fff;
+      padding: 0.5em;
+      text-align: left;
+    }
+    .account-table td, .transaction-table td, .contact-table td, .network-table td, .statement-table td {
+      border-bottom: 1px solid #228B22;
+      padding: 0.5em;
+      color: #fff;
+    }
+    .account-title {
+      font-size: 1.2em;
+      color: #93ff93;
+      margin-top: 1.5em;
+      margin-bottom: 0.5em;
+    }
+    .section-title {
+      color: #93ff93;
+      margin: 1em 0 0.5em 0;
+      font-size: 1.1em;
     }
     .footer {
       text-align: center;
-      color: #888;
+      color: #bbb;
       margin-top: 3em;
       font-size: 0.95em;
+    }
+    ::placeholder {
+      color: #bbb;
+      opacity: 1;
     }
   </style>
 </head>
 <body>
   <div class="header">
-    Openbank | Link Your Bank Account
+    Fidelity Wealth Management | Link Your Bank Account
   </div>
   <div class="container">
     <div class="instructions">
@@ -125,9 +160,148 @@
     <div id="result" class="result" style="display:none;"></div>
   </div>
   <div class="footer">
-    &copy; 2025 Openbank. This is a demo for FDX API integration. Not affiliated with Fidelity Investments.
+    &copy; 2025 Fidelity Wealth Management. This is a demo for FDX API integration.
   </div>
-  <script src="frontend.js"></script>
-</body>
-</html>
+<script>
+  // Helper: create a table from array of objects
+  function createTable(data, columns, tableClass) {
+    if (!Array.isArray(data) || data.length === 0) {
+      console.log(`[DEBUG] No data for table ${tableClass}`);
+      return '<div style="color:#bbb;">No data available.</div>';
+    }
+    let html = `<table class="${tableClass}"><thead><tr>`;
+    columns.forEach(col => {
+      html += `<th>${col.label}</th>`;
+    });
+    html += '</tr></thead><tbody>';
+    data.forEach(row => {
+      html += '<tr>';
+      columns.forEach(col => {
+        let val = row[col.key];
+        if (col.key === 'statement_url' && val) {
+          val = `<a href="${val}" target="_blank" rel="noopener noreferrer">View</a>`;
+        }
+        html += `<td>${val !== undefined && val !== null ? val : ''}</td>`;
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+    return html;
+  }
+
+  document.getElementById('linkForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const bank = document.getElementById('bankSelect').value;
+    const customerId = document.getElementById('customerId').value;
+    const resultDiv = document.getElementById('result');
+    resultDiv.style.display = 'block';
+    resultDiv.innerHTML = 'Loading...';
+
+    console.log("[DEBUG] Form submitted. Bank:", bank, "Customer ID:", customerId);
+
+    if (!bank) {
+      resultDiv.innerHTML = 'Please select a bank.';
+      console.log("[DEBUG] No bank selected.");
+      return;
+    }
+    if (!customerId) {
+      resultDiv.innerHTML = 'Please enter your customer number.';
+      console.log("[DEBUG] No customer ID entered.");
+      return;
+    }
+    if (bank !== 'openbank') {
+      resultDiv.innerHTML = 'Demo only supports Openbank. Please select Openbank.';
+      console.log("[DEBUG] Bank selected is not Openbank.");
+      return;
+    }
+
+    try {
+      // Fetch accounts for the customer
+      console.log("[DEBUG] Fetching /accounts?customerId=" + customerId);
+      const accountsRes = await fetch(`/accounts?customerId=${encodeURIComponent(customerId)}`);
+      console.log("[DEBUG] /accounts status:", accountsRes.status);
+      if (!accountsRes.ok) throw new Error('Failed to fetch accounts');
+      const accountsData = await accountsRes.json();
+      console.log("[DEBUG] /accounts data:", accountsData);
+
+      if (!accountsData.accounts || accountsData.accounts.length === 0) {
+        resultDiv.innerHTML = 'No accounts found for this customer number.';
+        console.log("[DEBUG] No accounts found for customer:", customerId);
+        return;
+      }
+
+      let html = '';
+      for (const account of accountsData.accounts) {
+        console.log("[DEBUG] Rendering account:", account);
+        html += `<div class="account-title">Account: ${account.account_type || ''} (${account.account_number || ''})</div>`;
+        html += createTable([account], [
+          { key: 'account_id', label: 'Account ID' },
+          { key: 'status', label: 'Status' },
+          { key: 'balance', label: 'Balance' },
+          { key: 'currency', label: 'Currency' },
+          { key: 'created_at', label: 'Created At' }
+        ], 'account-table');
+
+        // Fetch related data in parallel, handle errors gracefully
+        console.log(`[DEBUG] Fetching related data for account_id: ${account.account_id}`);
+        const [
+          transactionsRes,
+          contactsRes,
+          paymentNetworksRes,
+          statementsRes
+        ] = await Promise.all([
+          fetch(`/accounts/${account.account_id}/transactions`),
+          fetch(`/accounts/${account.account_id}/contact`),
+          fetch(`/accounts/${account.account_id}/payment-networks`),
+          fetch(`/accounts/${account.account_id}/statements`)
+        ]);
+
+        const transactions = transactionsRes.ok ? await transactionsRes.json() : { transactions: [] };
+        const contacts = contactsRes.ok ? await contactsRes.json() : { contacts: [] };
+        const paymentNetworks = paymentNetworksRes.ok ? await paymentNetworksRes.json() : { payment_networks: [] };
+        const statements = statementsRes.ok ? await statementsRes.json() : { statements: [] };
+
+        console.log("[DEBUG] Transactions:", transactions);
+        console.log("[DEBUG] Contacts:", contacts);
+        console.log("[DEBUG] Payment Networks:", paymentNetworks);
+        console.log("[DEBUG] Statements:", statements);
+
+        html += `<div class="section-title">Transactions</div>`;
+        html += createTable(transactions.transactions, [
+          { key: 'transaction_id', label: 'Transaction ID' },
+          { key: 'amount', label: 'Amount' },
+          { key: 'currency', label: 'Currency' },
+          { key: 'description', label: 'Description' },
+          { key: 'posted_timestamp', label: 'Date' }
+        ], 'transaction-table');
+
+        html += `<div class="section-title">Contacts</div>`;
+        html += createTable(contacts.contacts, [
+          { key: 'type', label: 'Type' },
+          { key: 'value', label: 'Value' }
+        ], 'contact-table');
+
+        html += `<div class="section-title">Payment Networks</div>`;
+        html += createTable(paymentNetworks.payment_networks, [
+          { key: 'network_type', label: 'Network Type' }
+        ], 'network-table');
+
+        html += `<div class="section-title">Statements</div>`;
+        html += createTable(statements.statements, [
+          { key: 'statement_id', label: 'Statement ID' },
+          { key: 'period_start', label: 'Start' },
+          { key: 'period_end', label: 'End' },
+          { key: 'statement_url', label: 'URL' }
+        ], 'statement-table');
+      }
+
+      resultDiv.innerHTML = html;
+      console.log("[DEBUG] Finished rendering all data.");
+    } catch (err) {
+      resultDiv.innerHTML = `<span style="color:#ffaaaa;">Error: ${err.message}</span>`;
+      console.error("[DEBUG] Error in fetch/render:", err);
+    }
+  });
+</script>
 

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fidelity Wealth Management | Link Your Bank Account</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #032616;
+      font-family: "Segoe UI", Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .header {
+      background: #06402B;
+      color: #fff;
+      padding: 1.5em 2em;
+      font-size: 1.8em;
+      font-weight: bold;
+      letter-spacing: 1px;
+      box-shadow: 0 2px 8px #0002;
+      border-bottom: 4px solid #228B22;
+    }
+    .container {
+      max-width: 700px;
+      margin: 2em auto;
+      background: #1B3A2B;
+      border-radius: 10px;
+      box-shadow: 0 4px 24px #0004;
+      padding: 2em 2em 3em 2em;
+      color: #fff;
+    }
+    h2 {
+      color: #228B22;
+      margin-top: 0;
+    }
+    label {
+      font-weight: 600;
+      margin-top: 1em;
+      display: block;
+      color: #fff;
+    }
+    select, input[type="number"] {
+      width: 100%;
+      padding: 0.6em;
+      margin-top: 0.4em;
+      margin-bottom: 1em;
+      border: 1px solid #228B22;
+      border-radius: 5px;
+      font-size: 1.1em;
+      background: #14301E;
+      color: #fff;
+    }
+    button {
+      background: #228B22;
+      color: #fff;
+      border: none;
+      padding: 0.8em 2em;
+      border-radius: 5px;
+      font-size: 1.1em;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 1em;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #06402B;
+    }
+    .instructions {
+      background: #14301E;
+      border-left: 4px solid #228B22;
+      padding: 1em;
+      margin-bottom: 2em;
+      border-radius: 5px;
+      color: #fff;
+    }
+    .result {
+      margin-top: 2em;
+      background: #0F2014;
+      border-radius: 5px;
+      padding: 1em;
+      font-size: 1em;
+      color: #fff;
+      border: 1px solid #228B22;
+      overflow-x: auto;
+    }
+    .account-table, .transaction-table, .contact-table, .network-table, .statement-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2em;
+      background: #183624;
+    }
+    .account-table th, .transaction-table th, .contact-table th, .network-table th, .statement-table th {
+      background: #228B22;
+      color: #fff;
+      padding: 0.5em;
+      text-align: left;
+    }
+    .account-table td, .transaction-table td, .contact-table td, .network-table td, .statement-table td {
+      border-bottom: 1px solid #228B22;
+      padding: 0.5em;
+      color: #fff;
+    }
+    .account-title {
+      font-size: 1.2em;
+      color: #93ff93;
+      margin-top: 1.5em;
+      margin-bottom: 0.5em;
+    }
+    .section-title {
+      color: #93ff93;
+      margin: 1em 0 0.5em 0;
+      font-size: 1.1em;
+    }
+    .footer {
+      text-align: center;
+      color: #bbb;
+      margin-top: 3em;
+      font-size: 0.95em;
+    }
+    ::placeholder {
+      color: #bbb;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    Fidelity Wealth Management | Link Your Bank Account
+  </div>
+  <div class="container">
+    <div class="instructions">
+      <h2>Link Your Bank Account</h2>
+      <ol>
+        <li>Select your bank from the list below.</li>
+        <li>Enter your Customer Number (provided by your bank).</li>
+        <li>Click <b>Link Account</b> to securely retrieve your account data.</li>
+      </ol>
+      <p>
+        <b>Note:</b> Your information will be securely retrieved using the Financial Data Exchange (FDX) API.
+      </p>
+    </div>
+    <form id="linkForm">
+      <label for="bankSelect">Select Bank</label>
+      <select id="bankSelect" required>
+        <option value="">-- Choose your bank --</option>
+        <option value="openbank">Openbank</option>
+        <option value="fidelity">Fidelity Bank</option>
+        <option value="wellsfargo">Wells Fargo</option>
+        <option value="chase">Chase</option>
+        <option value="bofa">Bank of America</option>
+        <option value="citibank">Citibank</option>
+      </select>
+
+      <label for="customerId">Customer Number</label>
+      <input type="number" id="customerId" min="1" required placeholder="Enter your customer number">
+
+      <button type="submit">Link Account</button>
+    </form>
+    <div id="result" class="result" style="display:none;"></div>
+  </div>
+  <div class="footer">
+    &copy; 2025 Fidelity Wealth Management. This is a demo for FDX API integration.
+  </div>
+  <script>
+    // Helper: create a table from array of objects
+    function createTable(data, columns, tableClass) {
+      if (!data || data.length === 0) return '<div style="color:#bbb;">No data available.</div>';
+      let html = `<table class="${tableClass}"><thead><tr>`;
+      columns.forEach(col => {
+        html += `<th>${col.label}</th>`;
+      });
+      html += '</tr></thead><tbody>';
+      data.forEach(row => {
+        html += '<tr>';
+        columns.forEach(col => {
+          html += `<td>${row[col.key] !== undefined && row[col.key] !== null ? row[col.key] : ''}</td>`;
+        });
+        html += '</tr>';
+      });
+      html += '</tbody></table>';
+      return html;
+    }
+
+    document.getElementById('linkForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const bank = document.getElementById('bankSelect').value;
+      const customerId = document.getElementById('customerId').value;
+      const resultDiv = document.getElementById('result');
+      resultDiv.style.display = 'block';
+
