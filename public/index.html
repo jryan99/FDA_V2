@@ -163,10 +163,8 @@
     &copy; 2025 Fidelity Wealth Management. This is a demo for FDX API integration.
   </div>
 <script>
-  // Helper: create a table from array of objects
   function createTable(data, columns, tableClass) {
     if (!Array.isArray(data) || data.length === 0) {
-      console.log(`[DEBUG] No data for table ${tableClass}`);
       return '<div style="color:#bbb;">No data available.</div>';
     }
     let html = `<table class="${tableClass}"><thead><tr>`;
@@ -198,42 +196,47 @@
     resultDiv.style.display = 'block';
     resultDiv.innerHTML = 'Loading...';
 
-    console.log("[DEBUG] Form submitted. Bank:", bank, "Customer ID:", customerId);
-
     if (!bank) {
       resultDiv.innerHTML = 'Please select a bank.';
-      console.log("[DEBUG] No bank selected.");
       return;
     }
     if (!customerId) {
       resultDiv.innerHTML = 'Please enter your customer number.';
-      console.log("[DEBUG] No customer ID entered.");
       return;
     }
     if (bank !== 'openbank') {
       resultDiv.innerHTML = 'Demo only supports Openbank. Please select Openbank.';
-      console.log("[DEBUG] Bank selected is not Openbank.");
       return;
     }
 
     try {
+      // Fetch customer info
+      const customerRes = await fetch(`/customers/${encodeURIComponent(customerId)}`);
+      if (!customerRes.ok) throw new Error('Failed to fetch customer info');
+      const customer = await customerRes.json();
+
       // Fetch accounts for the customer
-      console.log("[DEBUG] Fetching /accounts?customerId=" + customerId);
       const accountsRes = await fetch(`/accounts?customerId=${encodeURIComponent(customerId)}`);
-      console.log("[DEBUG] /accounts status:", accountsRes.status);
       if (!accountsRes.ok) throw new Error('Failed to fetch accounts');
       const accountsData = await accountsRes.json();
-      console.log("[DEBUG] /accounts data:", accountsData);
 
       if (!accountsData.accounts || accountsData.accounts.length === 0) {
         resultDiv.innerHTML = 'No accounts found for this customer number.';
-        console.log("[DEBUG] No accounts found for customer:", customerId);
         return;
       }
 
-      let html = '';
+      // Render customer info at the top
+      let html = `
+        <div style="background:#183624;padding:1em;border-radius:6px;margin-bottom:1.5em;">
+          <b>Customer:</b> ${customer.first_name} ${customer.last_name} <br>
+          <b>Email:</b> ${customer.email} <br>
+          <b>Customer ID:</b> ${customer.customer_id} <br>
+          <b>Created At:</b> ${customer.created_at}
+        </div>
+      `;
+
+      // Render accounts and related tables
       for (const account of accountsData.accounts) {
-        console.log("[DEBUG] Rendering account:", account);
         html += `<div class="account-title">Account: ${account.account_type || ''} (${account.account_number || ''})</div>`;
         html += createTable([account], [
           { key: 'account_id', label: 'Account ID' },
@@ -244,7 +247,6 @@
         ], 'account-table');
 
         // Fetch related data in parallel, handle errors gracefully
-        console.log(`[DEBUG] Fetching related data for account_id: ${account.account_id}`);
         const [
           transactionsRes,
           contactsRes,
@@ -261,11 +263,6 @@
         const contacts = contactsRes.ok ? await contactsRes.json() : { contacts: [] };
         const paymentNetworks = paymentNetworksRes.ok ? await paymentNetworksRes.json() : { payment_networks: [] };
         const statements = statementsRes.ok ? await statementsRes.json() : { statements: [] };
-
-        console.log("[DEBUG] Transactions:", transactions);
-        console.log("[DEBUG] Contacts:", contacts);
-        console.log("[DEBUG] Payment Networks:", paymentNetworks);
-        console.log("[DEBUG] Statements:", statements);
 
         html += `<div class="section-title">Transactions</div>`;
         html += createTable(transactions.transactions, [
@@ -297,11 +294,8 @@
       }
 
       resultDiv.innerHTML = html;
-      console.log("[DEBUG] Finished rendering all data.");
     } catch (err) {
       resultDiv.innerHTML = `<span style="color:#ffaaaa;">Error: ${err.message}</span>`;
-      console.error("[DEBUG] Error in fetch/render:", err);
     }
   });
 </script>
-

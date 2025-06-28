@@ -5,6 +5,20 @@ const db = new sqlite3.Database('./fdx.db');
 app.use(express.json());
 app.use(express.static('public'));
 
+// Get Customer data for the customeri
+app.get('/customers/:customerId', (req, res) => {
+  const customerId = req.params.customerId;
+  db.get(
+    'SELECT * FROM customers WHERE customer_id = ?',
+    [customerId],
+    (err, row) => {
+      if (err) return res.status(500).json({ error: err.message });
+      if (!row) return res.status(404).json({ error: 'Customer not found' });
+      res.json(row);
+    }
+  );
+});
+
 // Get all accounts for a customer
 app.get('/accounts', (req, res) => {
   const customerId = req.query.customerId;
