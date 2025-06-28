@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fidelity Wealth Management - Link Your Bank</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6f8; margin: 0; padding: 0; }
+    .container { max-width: 480px; margin: 40px auto 0 auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px #0001; padding: 2em; }
+    h1 { color: #1a237e; text-align: center; }
+    .instructions { background: #f0f4ff; border-radius: 8px; padding: 1em; margin-bottom: 2em; }
+    .instructions h2 { color: #1565c0; margin-top: 0; }
+    label { display: block; margin-top: 1.2em; font-weight: bold; }
+    input, select { width: 100%; padding: 0.7em; margin-top: 0.3em; border-radius: 6px; border: 1px solid #bbb; font-size: 1em; }
+    button { background: #1565c0; color: #fff; padding: 0.8em 2em; border: none; border-radius: 6px; font-size: 1.1em; margin-top: 1.5em; cursor: pointer; }
+    button:hover { background: #003c8f; }
+    .result { margin-top: 2em; padding: 1em; border-radius: 8px; background: #e3f2fd; color: #1a237e; }
+    .footer { margin-top: 3em; text-align: center; color: #888; font-size: 0.95em; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1em; }
+    th, td { border: 1px solid #d0d7de; padding: 0.6em; text-align: left; }
+    th { background: #e3f2fd; }
+    @media (max-width: 600px) {
+      .container { padding: 1em; }
+      h1 { font-size: 1.3em; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Fidelity Wealth Management</h1>
+    <div class="instructions">
+      <h2>Link Your Bank Account</h2>
+      <ol>
+        <li>Select your bank from the list below.</li>
+        <li>Enter your Customer Number (provided by your bank).</li>
+        <li>Click <b>Link Account</b> to securely retrieve your account data.</li>
+      </ol>
+      <p>
+        <b>Note:</b> Your information will be securely retrieved using the Financial Data Exchange (FDX) API.
+      </p>
+    </div>
+    <form id="linkForm">
+      <label for="bankSelect">Select Bank</label>
+      <select id="bankSelect" required>
+        <option value="">-- Choose your bank --</option>
+        <option value="openbank">Openbank</option>
+        <option value="fidelity">Fidelity Bank</option>
+        <option value="wellsfargo">Wells Fargo</option>
+        <option value="chase">Chase</option>
+        <option value="bofa">Bank of America</option>
+        <option value="citibank">Citibank</option>
+      </select>
+
+      <label for="customerId">Customer Number</label>
+      <input type="number" id="customerId" min="1" required placeholder="Enter your customer number">
+
+      <button type="submit">Link Account</button>
+    </form>
+    <div id="result" class="result" style="display:none;"></div>
+  </div>
+  <div class="footer">
+    &copy; 2025 Fidelity Wealth Management. This is a demo for FDX API integration.
+  </div>
+  <script>
+    // Helper: create a table from array of objects
+    function createTable(data, columns, tableClass) {
+      if (!data || data.length === 0) return '<div style="color:#bbb;">No data available.</div>';
+      let html = `<table class="${tableClass}"><thead><tr>`;
+      columns.forEach(col => {
+        html += `<th>${col.label}</th>`;
+      });
+      html += '</tr></thead><tbody>';
+      data.forEach(row => {
+        html += '<tr>';
+        columns.forEach(col => {
+          html += `<td>${row[col.key] !== undefined && row[col.key] !== null ? row[col.key] : ''}</td>`;
+        });
+        html += '</tr>';
+      });
+      html += '</tbody></table>';
+      return html;
+    }
+
+    document.getElementById('linkForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const bank = document.getElementById('bankSelect').value;
+      const customerId = document.getElementById('customerId').value;
+      const resultDiv = document.getElementById('result');
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = "Linking account...";
+
+      // Simulate an API call to your backend (replace with actual endpoint as needed)
+      try {
+        // Example: GET /api/accounts?bank=...&customerId=...
+        // For demo, simulate with static data:
+        await new Promise(r => setTimeout(r, 1000)); // Simulate network delay
+
+        // Simulated response
+        const accounts = [
+          { accountNumber: '123456789', type: 'Checking', balance: '$3,250.00', currency: 'USD' },
+          { accountNumber: '987654321', type: 'Savings', balance: '$8,100.00', currency: 'USD' }
+        ];
+        const transactions = [
+          { date: '2025-06-27', description: 'Starbucks', amount: '-$4.50', type: 'debit' },
+          { date: '2025-06-26', description: 'Payroll', amount: '+$2,000.00', type: 'credit' }
+        ];
+
+        resultDiv.innerHTML =
+          `<h3>Accounts for Customer #${customerId} at ${document.getElementById('bankSelect').selectedOptions[0].text}:</h3>` +
+          createTable(accounts, [
+            { key: 'accountNumber', label: 'Account Number' },
+            { key: 'type', label: 'Type' },
+            { key: 'balance', label: 'Balance' },
+            { key: 'currency', label: 'Currency' }
+          ], 'accounts-table') +
+          `<h3>Recent Transactions</h3>` +
+          createTable(transactions, [
+            { key: 'date', label: 'Date' },
+            { key: 'description', label: 'Description' },
+            { key: 'amount', label: 'Amount' },
+            { key: 'type', label: 'Type' }
+          ], 'transactions-table');
+
+      } catch (err) {
+        resultDiv.innerHTML = `<span style="color:red;">Error: ${err.message}</span>`;
+      }
+    });
+  </script>
+</body>
+</html>
+
