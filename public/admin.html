@@ -2,124 +2,101 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>FDX Admin Panel - Test Data Creator</title>
-  <style>
-    body { font-family: Arial, sans-serif; background: #f6f6f6; margin: 0; padding: 0; }
-    .container { max-width: 700px; margin: 40px auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 12px #0002; padding: 2em; }
-    h2 { color: #228B22; }
-    form { margin-bottom: 2em; }
-    label { display: block; margin-top: 1em; font-weight: bold; }
-    input, select { width: 100%; padding: 0.5em; margin-top: 0.2em; border-radius: 5px; border: 1px solid #ccc; }
-    button { margin-top: 1em; background: #228B22; color: #fff; padding: 0.7em 1.5em; border: none; border-radius: 5px; font-size: 1em; cursor: pointer; }
-    .success { color: #228B22; margin-top: 0.5em; }
-    .error { color: #d00; margin-top: 0.5em; }
-    hr { margin: 2em 0; }
-  </style>
+  <title>FDX Admin Panel - CRUD</title>
+  <link rel="stylesheet" href="admin.css">
 </head>
 <body>
   <div class="container">
-    <h2>Add Customer</h2>
-    <form id="customer-form">
-      <label>Customer ID</label>
-      <input type="number" name="customer_id" required>
-      <label>First Name</label>
-      <input type="text" name="first_name" required>
-      <label>Last Name</label>
-      <input type="text" name="last_name" required>
-      <label>Email</label>
-      <input type="email" name="email" required>
-      <label>Created At</label>
-      <input type="date" name="created_at" required>
-      <button type="submit">Add Customer</button>
-      <div id="customer-result"></div>
-    </form>
-
-    <hr>
-
-    <h2>Add Account</h2>
-    <form id="account-form">
-      <label>Account ID</label>
-      <input type="number" name="account_id" required>
-      <label>Customer ID</label>
-      <input type="number" name="customer_id" required>
-      <label>Account Type</label>
-      <select name="account_type" required>
-        <option value="checking">Checking</option>
-        <option value="savings">Savings</option>
-        <option value="credit">Credit</option>
-      </select>
-      <label>Account Number</label>
-      <input type="text" name="account_number" required>
-      <label>Status</label>
-      <select name="status" required>
-        <option value="active">Active</option>
-        <option value="closed">Closed</option>
-      </select>
-      <label>Balance</label>
-      <input type="number" step="0.01" name="balance" required>
-      <label>Currency</label>
-      <input type="text" name="currency" value="USD" required>
-      <label>Created At</label>
-      <input type="date" name="created_at" required>
-      <button type="submit">Add Account</button>
-      <div id="account-result"></div>
-    </form>
-
-    <hr>
-
-    <h2>Add Transaction</h2>
-    <form id="transaction-form">
-      <label>Transaction ID</label>
-      <input type="number" name="transaction_id" required>
-      <label>Account ID</label>
-      <input type="number" name="account_id" required>
-      <label>Amount</label>
-      <input type="number" step="0.01" name="amount" required>
-      <label>Type</label>
-      <select name="type" required>
-        <option value="credit">Credit</option>
-        <option value="debit">Debit</option>
-      </select>
-      <label>Description</label>
-      <input type="text" name="description" required>
-      <label>Created At</label>
-      <input type="date" name="created_at" required>
-      <button type="submit">Add Transaction</button>
-      <div id="transaction-result"></div>
-    </form>
+    <h1>FDX Admin Panel</h1>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="customers">Customers</button>
+      <button class="tab-btn" data-tab="accounts">Accounts</button>
+      <button class="tab-btn" data-tab="transactions">Transactions</button>
+    </div>
+    <div id="tab-customers" class="tab-content active">
+      <h2>Customers</h2>
+    <div class="search-section">
+      <h3>Search Customers</h3>
+      <input type="text" id="customer-search" placeholder="Search by ID, name, or email">
+      <button onclick="searchCustomers()">Search</button>
+      <table id="search-results" class="crud-table"></table>
+      <div id="search-message" style="margin-top:0.5em; font-weight:bold; color:#228B22;"></div>
+    </div>
+      <form id="customer-form" class="crud-form">
+        <input type="hidden" name="edit_id">
+        <label>Customer ID</label>
+        <input type="number" name="customer_id" required>
+        <label>First Name</label>
+        <input type="text" name="first_name" required>
+        <label>Last Name</label>
+        <input type="text" name="last_name" required>
+        <label>Email</label>
+        <input type="email" name="email" required>
+        <label>Created At</label>
+        <input type="date" name="created_at" required>
+        <button type="submit">Add / Update Customer</button>
+        <span class="result" id="customer-result"></span>
+      </form>
+      <table id="customers-table" class="crud-table"></table>
+    </div>
+    <div id="tab-accounts" class="tab-content">
+      <h2>Accounts</h2>
+      <form id="account-form" class="crud-form">
+        <input type="hidden" name="edit_id">
+        <label>Account ID</label>
+        <input type="number" name="account_id" required>
+        <label>Customer ID</label>
+        <input type="number" name="customer_id" required>
+        <label>Account Type</label>
+        <select name="account_type" required>
+          <option value="checking">Checking</option>
+          <option value="savings">Savings</option>
+          <option value="credit">Credit</option>
+        </select>
+        <label>Account Number</label>
+        <input type="text" name="account_number" required>
+        <label>Status</label>
+        <select name="status" required>
+          <option value="active">Active</option>
+          <option value="closed">Closed</option>
+        </select>
+        <label>Balance</label>
+        <input type="number" step="0.01" name="balance" required>
+        <label>Currency</label>
+        <input type="text" name="currency" value="USD" required>
+        <label>Created At</label>
+        <input type="date" name="created_at" required>
+        <button type="submit">Add / Update Account</button>
+        <span class="result" id="account-result"></span>
+      </form>
+      <table id="accounts-table" class="crud-table"></table>
+    </div>
+    <div id="tab-transactions" class="tab-content">
+      <h2>Transactions</h2>
+      <form id="transaction-form" class="crud-form">
+        <input type="hidden" name="edit_id">
+        <label>Transaction ID</label>
+        <input type="number" name="transaction_id" required>
+        <label>Account ID</label>
+        <input type="number" name="account_id" required>
+        <label>Amount</label>
+        <input type="number" step="0.01" name="amount" required>
+        <label>Type</label>
+        <select name="type" required>
+          <option value="credit">Credit</option>
+          <option value="debit">Debit</option>
+        </select>
+        <label>Description</label>
+        <input type="text" name="description" required>
+        <label>Created At</label>
+        <input type="date" name="created_at" required>
+        <button type="submit">Add / Update Transaction</button>
+        <span class="result" id="transaction-result"></span>
+      </form>
+      <table id="transactions-table" class="crud-table"></table>
+    </div>
   </div>
-  <script>
-    function handleForm(formId, endpoint, resultId) {
-      document.getElementById(formId).addEventListener('submit', function(e) {
-        e.preventDefault();
-        const form = e.target;
-        const data = {};
-        Array.from(form.elements).forEach(el => {
-          if (el.name) data[el.name] = el.value;
-        });
-        fetch(endpoint, {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify(data)
-        })
-        .then(res => res.json())
-        .then(res => {
-          if (res.success) {
-            document.getElementById(resultId).innerHTML = `<span class="success">Success!</span>`;
-            form.reset();
-          } else {
-            document.getElementById(resultId).innerHTML = `<span class="error">${res.error || 'Error'}</span>`;
-          }
-        })
-        .catch(err => {
-          document.getElementById(resultId).innerHTML = `<span class="error">${err.message}</span>`;
-        });
-      });
-    }
-    handleForm('customer-form', '/admin/customers', 'customer-result');
-    handleForm('account-form', '/admin/accounts', 'account-result');
-    handleForm('transaction-form', '/admin/transactions', 'transaction-result');
-  </script>
+  <script src="fdx-admin.js"></script>
 </body>
 </html>
 
