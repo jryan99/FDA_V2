@@ -2,190 +2,348 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Fidelity Wealth Management | Link Your Bank Account</title>
+  <title>Fidelity Wealth Management</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
-      background: #032616;
-      font-family: "Segoe UI", Arial, sans-serif;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #e8f5e9 0%, #b2dfdb 100%);
       margin: 0;
       padding: 0;
     }
-    .header {
-      background: #06402B;
-      color: #fff;
-      padding: 1.5em 2em;
-      font-size: 1.8em;
-      font-weight: bold;
-      letter-spacing: 1px;
-      box-shadow: 0 2px 8px #0002;
-      border-bottom: 4px solid #228B22;
-    }
     .container {
-      max-width: 700px;
-      margin: 2em auto;
-      background: #1B3A2B;
-      border-radius: 10px;
-      box-shadow: 0 4px 24px #0004;
-      padding: 2em 2em 3em 2em;
-      color: #fff;
+      max-width: 950px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px #0001;
+      padding: 2em;
     }
-    h2 {
-      color: #228B22;
-      margin-top: 0;
+    h1 {
+      color: #217a38;
+      text-align: center;
+    }
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid #e0e0e0;
+      margin-bottom: 2em;
+    }
+    .tab {
+      padding: 1em 2em;
+      cursor: pointer;
+      background: #e8f5e9;
+      color: #217a38;
+      border: none;
+      border-radius: 12px 12px 0 0;
+      margin-right: 4px;
+      font-size: 1.1em;
+      transition: background 0.2s;
+      outline: none;
+    }
+    .tab.active {
+      background: #217a38;
+      color: #fff;
+      font-weight: bold;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
     }
     label {
-      font-weight: 600;
-      margin-top: 1em;
       display: block;
-      color: #fff;
+      margin-top: 1em;
+      font-weight: bold;
     }
-    select, input[type="number"] {
+    input, select {
       width: 100%;
       padding: 0.6em;
-      margin-top: 0.4em;
-      margin-bottom: 1em;
-      border: 1px solid #228B22;
-      border-radius: 5px;
-      font-size: 1.1em;
-      background: #14301E;
-      color: #fff;
+      margin-top: 0.2em;
+      border-radius: 6px;
+      border: 1px solid #bbb;
+      font-size: 1em;
     }
     button {
-      background: #228B22;
+      background: #217a38;
       color: #fff;
+      padding: 0.7em 1.5em;
       border: none;
-      padding: 0.8em 2em;
-      border-radius: 5px;
-      font-size: 1.1em;
-      font-weight: bold;
-      cursor: pointer;
+      border-radius: 6px;
+      font-size: 1em;
       margin-top: 1em;
-      transition: background 0.2s;
+      cursor: pointer;
+    }
+    button.danger {
+      background: #b71c1c;
     }
     button:hover {
-      background: #06402B;
+      background: #145526;
     }
-    .instructions {
-      background: #14301E;
-      border-left: 4px solid #228B22;
-      padding: 1em;
-      margin-bottom: 2em;
-      border-radius: 5px;
-      color: #fff;
-    }
-    .result {
-      margin-top: 2em;
-      background: #0F2014;
-      border-radius: 5px;
-      padding: 1em;
-      font-size: 1em;
-      color: #fff;
-      border: 1px solid #228B22;
-      overflow-x: auto;
-    }
-    .account-table, .transaction-table, .contact-table, .network-table, .statement-table {
+    table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 2em;
-      background: #183624;
+      margin-top: 1em;
     }
-    .account-table th, .transaction-table th, .contact-table th, .network-table th, .statement-table th {
-      background: #228B22;
-      color: #fff;
-      padding: 0.5em;
+    th, td {
+      border: 1px solid #d0d7de;
+      padding: 0.6em;
       text-align: left;
     }
-    .account-table td, .transaction-table td, .contact-table td, .network-table td, .statement-table td {
-      border-bottom: 1px solid #228B22;
-      padding: 0.5em;
-      color: #fff;
+    th {
+      background: #e8f5e9;
     }
-    .account-title {
-      font-size: 1.2em;
-      color: #93ff93;
-      margin-top: 1.5em;
-      margin-bottom: 0.5em;
+    tr.selected {
+      background: #d0f5e0;
     }
-    .section-title {
-      color: #93ff93;
-      margin: 1em 0 0.5em 0;
-      font-size: 1.1em;
+    .result {
+      margin-top: 1em;
+      color: #217a38;
     }
     .footer {
-      text-align: center;
-      color: #bbb;
       margin-top: 3em;
+      text-align: center;
+      color: #888;
       font-size: 0.95em;
     }
-    ::placeholder {
-      color: #bbb;
-      opacity: 1;
+    .search-section {
+      background: #e8f5e9;
+      border-radius: 8px;
+      padding: 1em 2em 1em 2em;
+      margin-bottom: 2em;
+      display: flex;
+      align-items: center;
+      gap: 1em;
+      flex-wrap: wrap;
+    }
+    .search-section label {
+      margin: 0;
+    }
+    .customer-info-box {
+      background: #f1f8e9;
+      border: 1px solid #c8e6c9;
+      border-radius: 8px;
+      padding: 1em 2em;
+      margin: 1em 0 2em 0;
+      color: #145526;
+      font-size: 1.05em;
+    }
+    @media (max-width: 700px) {
+      .container { padding: 1em; }
+      .tabs { flex-direction: column; }
+      .tab { margin-bottom: 4px; }
+      .search-section { flex-direction: column; gap: 0.5em; padding: 1em; }
+      .customer-info-box { padding: 1em; }
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    Fidelity Wealth Management | Link Your Bank Account
-  </div>
   <div class="container">
-    <div class="instructions">
-      <h2>Link Your Bank Account</h2>
-      <ol>
-        <li>Select your bank from the list below.</li>
-        <li>Enter your Customer Number (provided by your bank).</li>
-        <li>Click <b>Link Account</b> to securely retrieve your account data.</li>
-      </ol>
-      <p>
-        <b>Note:</b> Your information will be securely retrieved using the Financial Data Exchange (FDX) API.
-      </p>
+    <h1>Fidelity Wealth Management</h1>
+    <!-- Search by Customer Section -->
+    <div class="search-section">
+      <label for="search-customer">Search Customer by ID:</label>
+      <input type="number" id="search-customer" placeholder="Enter customer ID" min="1" />
+      <button id="search-customer-btn">Search</button>
+      <span id="search-status" style="color:#b71c1c; margin-left:1em;"></span>
     </div>
-    <form id="linkForm">
-      <label for="bankSelect">Select Bank</label>
-      <select id="bankSelect" required>
-        <option value="">-- Choose your bank --</option>
-        <option value="openbank">Openbank</option>
-        <option value="fidelity">Fidelity Bank</option>
-        <option value="wellsfargo">Wells Fargo</option>
-        <option value="chase">Chase</option>
-        <option value="bofa">Bank of America</option>
-        <option value="citibank">Citibank</option>
-      </select>
+    <!-- Populated Customer Info -->
+    <div id="customer-info" class="customer-info-box" style="display:none;"></div>
 
-      <label for="customerId">Customer Number</label>
-      <input type="number" id="customerId" min="1" required placeholder="Enter your customer number">
+    <div class="tabs">
+      <button class="tab active" data-tab="customers">Customers</button>
+      <button class="tab" data-tab="accounts">Accounts</button>
+      <button class="tab" data-tab="transactions">Transactions</button>
+    </div>
 
-      <button type="submit">Link Account</button>
-    </form>
-    <div id="result" class="result" style="display:none;"></div>
+    <!-- Customers Tab -->
+    <div class="tab-content active" id="tab-customers">
+      <form id="customer-form">
+        <input type="hidden" name="edit_mode" value="false">
+        <label>Customer ID</label>
+        <input type="number" name="customer_id" required>
+        <label>First Name</label>
+        <input type="text" name="first_name" required>
+        <label>Last Name</label>
+        <input type="text" name="last_name" required>
+        <label>Email</label>
+        <input type="email" name="email" required>
+        <label>Created At</label>
+        <input type="date" name="created_at" required>
+        <button type="submit">Save Customer</button>
+        <button type="button" id="delete-customer" class="danger" style="display:none;">Delete</button>
+        <div id="customer-result" class="result"></div>
+      </form>
+      <!-- You can implement customer table/list here if needed -->
+    </div>
+
+    <!-- Accounts Tab -->
+    <div class="tab-content" id="tab-accounts">
+      <form id="account-form">
+        <input type="hidden" name="edit_mode" value="false">
+        <label>Account ID</label>
+        <input type="number" name="account_id" required>
+        <label>Customer ID</label>
+        <input type="number" name="customer_id" required>
+        <label>Account Type</label>
+        <select name="account_type" required>
+          <option value="checking">Checking</option>
+          <option value="savings">Savings</option>
+          <option value="credit">Credit</option>
+        </select>
+        <label>Account Number</label>
+        <input type="text" name="account_number" required>
+        <label>Status</label>
+        <select name="status" required>
+          <option value="active">Active</option>
+          <option value="closed">Closed</option>
+        </select>
+        <label>Balance</label>
+        <input type="number" step="0.01" name="balance" required>
+        <label>Currency</label>
+        <input type="text" name="currency" value="USD" required>
+        <label>Created At</label>
+        <input type="date" name="created_at" required>
+        <button type="submit">Save Account</button>
+        <button type="button" id="delete-account" class="danger" style="display:none;">Delete</button>
+        <div id="account-result" class="result"></div>
+      </form>
+      <div id="accounts-table-container"></div>
+    </div>
+
+    <!-- Transactions Tab -->
+    <div class="tab-content" id="tab-transactions">
+      <form id="transaction-form">
+        <input type="hidden" name="edit_mode" value="false">
+        <label>Transaction ID</label>
+        <input type="number" name="transaction_id" required>
+        <label>Account ID</label>
+        <input type="number" name="account_id" required>
+        <label>Amount</label>
+        <input type="number" step="0.01" name="amount" required>
+        <label>Type</label>
+        <select name="type" required>
+          <option value="credit">Credit</option>
+          <option value="debit">Debit</option>
+        </select>
+        <label>Description</label>
+        <input type="text" name="description" required>
+        <label>Created At</label>
+        <input type="date" name="created_at" required>
+        <button type="submit">Save Transaction</button>
+        <button type="button" id="delete-transaction" class="danger" style="display:none;">Delete</button>
+        <div id="transaction-result" class="result"></div>
+      </form>
+      <div id="transactions-table-container"></div>
+    </div>
   </div>
   <div class="footer">
-    &copy; 2025 Fidelity Wealth Management. This is a demo for FDX API integration.
+    &copy; 2025 Fidelity Wealth Management. Demo for FDX API integration.
   </div>
   <script>
-    // Helper: create a table from array of objects
-    function createTable(data, columns, tableClass) {
-      if (!data || data.length === 0) return '<div style="color:#bbb;">No data available.</div>';
-      let html = `<table class="${tableClass}"><thead><tr>`;
-      columns.forEach(col => {
-        html += `<th>${col.label}</th>`;
+    // Tab logic
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', function() {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
       });
-      html += '</tr></thead><tbody>';
-      data.forEach(row => {
-        html += '<tr>';
-        columns.forEach(col => {
-          html += `<td>${row[col.key] !== undefined && row[col.key] !== null ? row[col.key] : ''}</td>`;
+    });
+
+    // --- Search by Customer logic ---
+    const searchBtn = document.getElementById('search-customer-btn');
+    const searchInput = document.getElementById('search-customer');
+    const customerInfoBox = document.getElementById('customer-info');
+    const searchStatus = document.getElementById('search-status');
+
+    searchBtn.onclick = async function() {
+      const customerId = searchInput.value.trim();
+      customerInfoBox.style.display = 'none';
+      searchStatus.textContent = '';
+      if (!customerId) {
+        searchStatus.textContent = "Please enter a customer ID.";
+        return;
+      }
+      searchStatus.textContent = "Searching...";
+      try {
+        const res = await fetch(`/customers/${customerId}`);
+        if (!res.ok) {
+          throw new Error('Customer not found');
+        }
+        const c = await res.json();
+        searchStatus.textContent = "";
+        customerInfoBox.innerHTML = `
+          <b>Customer Found:</b><br>
+          <b>ID:</b> ${c.customer_id} &nbsp;
+          <b>Name:</b> ${c.first_name} ${c.last_name} &nbsp;
+          <b>Email:</b> ${c.email} &nbsp;
+          <b>Created At:</b> ${c.created_at}
+        `;
+        customerInfoBox.style.display = 'block';
+
+        // Auto-populate the customer form for editing
+        const form = document.getElementById('customer-form');
+        form.customer_id.value = c.customer_id;
+        form.first_name.value = c.first_name;
+        form.last_name.value = c.last_name;
+        form.email.value = c.email;
+        form.created_at.value = c.created_at;
+        form.edit_mode.value = 'true';
+        document.getElementById('delete-customer').style.display = '';
+        
+        // Optionally, auto-load accounts for this customer in Accounts tab
+        loadAccounts(c.customer_id);
+      } catch (e) {
+        searchStatus.textContent = "Error: " + e.message;
+      }
+    };
+
+    // Optional: Enter key triggers search
+    searchInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        searchBtn.click();
+      }
+    });
+
+    // --- Load Accounts for a Customer ---
+    async function loadAccounts(customerId) {
+      const container = document.getElementById('accounts-table-container');
+      container.innerHTML = '';
+      if (!customerId) return;
+      try {
+        const res = await fetch(`/accounts?customerId=${customerId}`);
+        if (!res.ok) throw new Error('No accounts found');
+        const data = await res.json();
+        if (!data.accounts || !data.accounts.length) {
+          container.innerHTML = '<div style="color:#b71c1c;">No accounts found for this customer.</div>';
+          return;
+        }
+        let html = `<table><thead>
+          <tr><th>ID</th><th>Type</th><th>Number</th><th>Status</th><th>Balance</th><th>Currency</th><th>Created At</th></tr>
+        </thead><tbody>`;
+        data.accounts.forEach(a => {
+          html += `<tr>
+            <td>${a.account_id}</td>
+            <td>${a.account_type}</td>
+            <td>${a.account_number}</td>
+            <td>${a.status}</td>
+            <td>${a.balance}</td>
+            <td>${a.currency}</td>
+            <td>${a.created_at}</td>
+          </tr>`;
         });
-        html += '</tr>';
-      });
-      html += '</tbody></table>';
-      return html;
+        html += '</tbody></table>';
+        container.innerHTML = html;
+      } catch (e) {
+        container.innerHTML = `<div style="color:#b71c1c;">${e.message}</div>`;
+      }
     }
 
-    document.getElementById('linkForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const bank = document.getElementById('bankSelect').value;
-      const customerId = document.getElementById('customerId').value;
-      const resultDiv = document.getElementById('result');
-      resultDiv.style.display = 'block';
+    // --- Load Transactions for an Account ---
+    // You can add a similar function to load transactions for a selected account
+  </script>
+</body>
+</html>
 
