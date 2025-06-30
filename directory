@@ -1,0 +1,26 @@
+total 272
+drwxr-xr-x@  25 John  staff    800 Jun 29 06:48 .
+-rw-r--r--    1 John  staff      0 Jun 29 06:48 directory
+-rw-r--r--    1 John  staff   3143 Jun 29 06:39 fdx-api.js
+drwxr-xr-x    5 John  staff    160 Jun 29 06:35 public
+drwxr-xr-x   14 John  staff    448 Jun 29 05:48 .git
+-rw-r--r--    1 John  staff   3973 Jun 29 05:48 readme.md
+-rw-r--r--    1 John  staff   6148 Jun 29 05:44 .DS_Store
+drwxr-xr-x   10 John  staff    320 Jun 29 05:28 ..
+-rw-r--r--    1 John  staff  36864 Jun 28 12:17 fdx.db
+drwxr-xr-x    4 John  staff    128 Jun 28 09:32 backup
+-rw-r--r--    1 John  staff   1072 Jun 28 06:35 package.json
+drwxr-xr-x  353 John  staff  11296 Jun 28 06:31 node_modules
+-rw-r--r--    1 John  staff    687 Jun 27 19:44 fdx.sql
+-rw-r--r--    1 John  staff    687 Jun 27 14:37 cs.sql
+drwxr-xr-x   21 John  staff    672 Jun 26 20:36 data
+drwxr-xr-x    2 John  staff     64 Jun 26 20:35 PRE
+-rwxr--r--    1 John  staff    406 Jun 26 20:03 test_fdx
+-rw-r--r--    1 John  staff  12288 Jun 26 15:07 .load_sql.swo
+-rw-r--r--    1 John  staff  36864 Jun 26 14:13 myfdx.db
+-rw-r--r--    1 John  staff      0 Jun 26 13:35 .read
+-rwxr--r--    1 John  staff     16 Jun 22 18:47 gc
+-rwxr-xr-x    1 John  staff    332 Jun 22 18:45 git_commit.sh
+-rw-r--r--    1 John  staff    938 Jun 22 18:27 server.js
+-rw-r--r--    1 John  staff   1014 Jun 22 18:12 accounts-api.js
+-rw-r--r--    1 John  staff     14 Jun 21 06:56 .gitignore
