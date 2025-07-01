@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <title>Fidelity Portfolio Demo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Plaid Link JS -->
-  <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
   <style>
     :root {
       --fidelity-green: #10713f;
@@ -322,19 +320,6 @@
       gap: 18px;
       margin-bottom: 28px;
     }
-    .provider-logo {
-      background: #fff;
-      border: 1px solid #eee;
-      border-radius: 8px;
-      padding: 10px 0 10px 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 60px;
-      gap: 8px;
-      transition: box-shadow 0.2s;
-      cursor: pointer;
-    }
     .provider-logo img {
       max-height: 32px;
       max-width: 90px;
@@ -478,10 +463,6 @@
         <div class="link-accounts-title">Link your accounts</div>
         <input class="link-accounts-search" type="text" placeholder="Find my financial provider" />
         <div class="provider-grid">
-          <!-- Openbank as first provider, icon only -->
-          <div class="provider-logo" id="openbank-provider">
-            <img src="/image1.png" alt="Openbank" style="max-height:32px;max-width:90px;">
-          </div>
           <div class="provider-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/3/30/American_Express_logo_%282018%29.svg" alt="American Express"></div>
           <div class="provider-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/1/16/Bank_of_America_logo.svg" alt="Bank of America"></div>
           <div class="provider-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Capital_One_logo.svg" alt="Capital One"></div>
@@ -533,7 +514,6 @@
       var summaryTab = document.getElementById('summary-tab');
       var fullviewTab = document.getElementById('fullview-tab');
       var backBtn = document.getElementById('back-to-main-btn');
-      var openbankProvider = document.getElementById('openbank-provider');
       if (addBtn && linkAccountsScreen) {
         addBtn.onclick = function() {
           if (summaryTab) summaryTab.style.display = 'none';
@@ -546,38 +526,12 @@
         backBtn.onclick = function() {
           linkAccountsScreen.style.display = 'none';
           if (mainTabs) mainTabs.style.display = '';
-          // Show the fullview tab again
+          // Optionally, show the fullview tab again
           if (fullviewTab) {
             document.getElementById('tab-fullview').classList.add('active');
             document.getElementById('tab-summary').classList.remove('active');
             summaryTab.style.display = 'none';
             fullviewTab.style.display = 'block';
-          }
-        };
-      }
-      // Plaid Link logic for Openbank
-      if (openbankProvider) {
-        openbankProvider.onclick = async function() {
-          try {
-            const res = await fetch('/api/create_link_token', { method: 'POST' });
-            const data = await res.json();
-            if (!data.link_token) {
-              alert('Could not get Plaid link token');
-              return;
-            }
-            const handler = Plaid.create({
-              token: data.link_token,
-              onSuccess: function(public_token, metadata) {
-                alert('Bank linked! (public_token: ' + public_token + ')');
-                // You can now exchange the public_token on the backend
-              },
-              onExit: function(err, metadata) {
-                // Handle exit
-              }
-            });
-            handler.open();
-          } catch (e) {
-            alert('Plaid Link error: ' + e.message);
           }
         };
       }

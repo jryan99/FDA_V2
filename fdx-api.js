@@ -2,11 +2,43 @@ const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const app = express();
 const db = new sqlite3.Database('./fdx.db');
+require('dotenv').config();
 app.use(express.json());
-app.use(express.static('public'));
 
-// Get Customer data for the customeri
-app.get('/customers/:customerId', (req, res) => {
+// Plaid setup (if needed)
+const { Configuration, PlaidApi, PlaidEnvironments } = require('plaid');
+const configuration = new Configuration({
+  basePath: PlaidEnvironments.sandbox,
+  baseOptions: {
+    headers: {
+      'PLAID-CLIENT-ID': process.env.PLAID_CLIENT_ID,
+      'PLAID-SECRET': process.env.PLAID_SECRET,
+      'Plaid-Version': '2020-09-14',
+    },
+  },
+});
+const plaidClient = new PlaidApi(configuration);
+
+// Create Plaid Link token
+app.post('/api/create_link_token', async (req, res) => {
+  try {
+    const plaidResponse = await plaidClient.linkTokenCreate({
+      user: { client_user_id: 'unique-user-id' },
+      client_name: 'Openbank',
+      products: ['auth', 'transactions'],
+      country_codes: ['US'],
+      language: 'en',
+    });
+    res.json({ link_token: plaidResponse.data.link_token });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// --- Openbank sub-page endpoints ---
+
+// Get Openbank customer info
+app.get('/api/openbank/customer/:customerId', (req, res) => {
   const customerId = req.params.customerId;
   db.get(
     'SELECT * FROM customers WHERE customer_id = ?',
@@ -19,8 +51,8 @@ app.get('/customers/:customerId', (req, res) => {
   );
 });
 
-// Get all accounts for a customer
-app.get('/accounts', (req, res) => {
+// Get Openbank accounts for customer
+app.get('/api/openbank/accounts', (req, res) => {
   const customerId = req.query.customerId;
   if (!customerId) return res.status(400).json({error: 'customerId required'});
   db.all(
@@ -33,26 +65,15 @@ app.get('/accounts', (req, res) => {
   );
 });
 
-// Get account details by accountId
-app.get('/accounts/:accountId', (req, res) => {
-  const accountId = req.params.accountId;
-  db.get(
-    'SELECT * FROM accounts WHERE account_id = ?',
-    [accountId],
-    (err, row) => {
-      if (err) return res.status(500).json({error: err.message});
-      if (!row) return res.status(404).json({error: 'Account not found'});
-      res.json(row);
-    }
-  );
-});
-
-// Get transactions for an account
-app.get('/accounts/:accountId/transactions', (req, res) => {
-  const accountId = req.params.accountId;
+// Get Openbank transactions for customer
+app.get('/api/openbank/transactions', (req, res) => {
+  const customerId = req.query.customerId;
+  if (!customerId) return res.status(400).json({error: 'customerId required'});
   db.all(
-    'SELECT * FROM transactions WHERE account_id = ?',
-    [accountId],
+    `SELECT t.* FROM transactions t
+     JOIN accounts a ON t.account_id = a.account_id
+     WHERE a.customer_id = ?`,
+    [customerId],
     (err, rows) => {
       if (err) return res.status(500).json({error: err.message});
       res.json({transactions: rows});
@@ -60,38 +81,15 @@ app.get('/accounts/:accountId/transactions', (req, res) => {
   );
 });
 
-// Get contact info for an account
-app.get('/accounts/:accountId/contact', (req, res) => {
-  const accountId = req.params.accountId;
+// Get Openbank statements for customer
+app.get('/api/openbank/statements', (req, res) => {
+  const customerId = req.query.customerId;
+  if (!customerId) return res.status(400).json({error: 'customerId required'});
   db.all(
-    'SELECT * FROM account_contacts WHERE account_id = ?',
-    [accountId],
-    (err, rows) => {
-      if (err) return res.status(500).json({error: err.message});
-      res.json({contacts: rows});
-    }
-  );
-});
-
-// Get payment networks for an account
-app.get('/accounts/:accountId/payment-networks', (req, res) => {
-  const accountId = req.params.accountId;
-  db.all(
-    'SELECT * FROM payment_networks WHERE account_id = ?',
-    [accountId],
-    (err, rows) => {
-      if (err) return res.status(500).json({error: err.message});
-      res.json({payment_networks: rows});
-    }
-  );
-});
-
-// Get statements for an account
-app.get('/accounts/:accountId/statements', (req, res) => {
-  const accountId = req.params.accountId;
-  db.all(
-    'SELECT * FROM statements WHERE account_id = ?',
-    [accountId],
+    `SELECT s.* FROM statements s
+     JOIN accounts a ON s.account_id = a.account_id
+     WHERE a.customer_id = ?`,
+    [customerId],
     (err, rows) => {
       if (err) return res.status(500).json({error: err.message});
       res.json({statements: rows});
@@ -99,14 +97,15 @@ app.get('/accounts/:accountId/statements', (req, res) => {
   );
 });
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-  res.json({status: 'FDA_V2  is running'});
-});
+// Serve static files after API routes
+app.use(express.static('public'));
 
-// Start the server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`FDA_V2 server running on port ${PORT}`);
-});
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`FDA_V2 server running on port ${PORT}`);
+  });
+}
+
+module.exports = app;
 

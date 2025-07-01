@@ -273,7 +273,7 @@
       font-size: 1.1rem;
       margin-bottom: 18px;
     }
-    .edit-btn, .add-btn, .back-btn {
+    .edit-btn, .add-btn {
       background: var(--fidelity-green);
       color: #fff;
       border: none;
@@ -283,38 +283,11 @@
       font-weight: 600;
       cursor: pointer;
       margin-top: 12px;
-      margin-right: 12px;
       transition: background 0.2s;
       display: inline-block;
     }
-    .edit-btn:hover, .add-btn:hover, .back-btn:hover {
+    .edit-btn:hover, .add-btn:hover {
       background: var(--fidelity-green-dark);
-    }
-    /* Link Accounts Interstitial */
-    .link-accounts-container {
-      background: #fff;
-      border-radius: 14px;
-      box-shadow: 0 2px 8px rgba(44, 108, 75, 0.08);
-      border: 1px solid var(--fidelity-border);
-      max-width: 600px;
-      margin: 32px auto 0 auto;
-      padding: 36px 32px 16px 32px;
-    }
-    .link-accounts-title {
-      font-size: 1.4rem;
-      font-weight: 700;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-    .link-accounts-search {
-      width: 100%;
-      padding: 10px 16px;
-      border: 1px solid #ccc;
-      border-radius: 20px;
-      font-size: 1.05rem;
-      margin-bottom: 24px;
-      outline: none;
-      background: #fafbfa;
     }
     .provider-grid {
       display: grid;
@@ -340,6 +313,38 @@
       max-width: 90px;
       object-fit: contain;
     }
+    .bank-icon {
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      margin-right: 4px;
+      display: inline-block;
+    }
+    .link-accounts-container {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(44, 108, 75, 0.08);
+      border: 1px solid var(--fidelity-border);
+      max-width: 600px;
+      margin: 32px auto 0 auto;
+      padding: 36px 32px 16px 32px;
+    }
+    .link-accounts-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .link-accounts-search {
+      width: 100%;
+      padding: 10px 16px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      font-size: 1.05rem;
+      margin-bottom: 24px;
+      outline: none;
+      background: #fafbfa;
+    }
     .link-accounts-note {
       display: flex;
       align-items: flex-start;
@@ -347,6 +352,10 @@
       color: #444;
       margin-bottom: 16px;
       gap: 10px;
+    }
+    .link-accounts-note svg {
+      margin-top: 2px;
+      flex-shrink: 0;
     }
     .link-accounts-additional {
       background: #f5f5f5;
@@ -402,7 +411,7 @@
   </div>
   <div class="container">
     <!-- Tabs -->
-    <div class="tabs" id="main-tabs">
+    <div class="tabs">
       <button class="tab active" id="tab-summary" onclick="showTab('summary')">Summary</button>
       <button class="tab" id="tab-fullview" onclick="showTab('fullview')">Full View</button>
     </div>
@@ -412,18 +421,18 @@
         <!-- Sidebar -->
         <div class="sidebar">
           <div class="sidebar-title">All accounts</div>
-          <div class="sidebar-balance">$500,000.00</div>
+          <div class="sidebar-balance">$1,930,541.30</div>
           <div class="sidebar-section">
             <div class="label">Investment</div>
-            <div class="value">$500,000.00</div>
+            <div class="value">$1,164.75</div>
             <div class="label" style="margin-top:8px;">Retirement</div>
-            <div class="value">$0.00</div>
+            <div class="value">$1,929,349.16</div>
           </div>
           <div class="sidebar-section">
             <div class="label">PROFIT SHARING</div>
-            <div class="value">$0.00</div>
+            <div class="value">$1,929,349.10</div>
             <div class="label">BrokerageLink</div>
-            <div class="value">$0.00</div>
+            <div class="value">$0.06</div>
           </div>
         </div>
         <!-- Main Content Area -->
@@ -431,8 +440,8 @@
           <div class="card">
             <div class="card-title">Balance</div>
             <div class="balance-section">
-              <span class="balance-amount">$500,000.00</span>
-              <span class="balance-change">+0.00 (0.00%)</span>
+              <span class="balance-amount">$1,930,541.30</span>
+              <span class="balance-change">+963.70 (+0.05%)</span>
             </div>
             <div class="balance-chart">
               <div class="placeholder-chart"></div>
@@ -457,9 +466,9 @@
             <button class="networth-tab">Budget</button>
             <button class="networth-tab">Debt</button>
           </div>
-          <div class="networth-value">$500,000.00 <span title="info" style="font-size:1.2rem;color:#888;cursor:pointer;">&#9432;</span></div>
+          <div class="networth-value">$2,030,541.30 <span title="info" style="font-size:1.2rem;color:#888;cursor:pointer;">&#9432;</span></div>
           <div class="networth-date">As of 07/01/2025</div>
-          <div class="networth-change">+0.00 (0.00%) Last 90 days</div>
+          <div class="networth-change">-$19,112.89 (-0.93%) Last 90 days</div>
           <hr style="margin:28px 0 18px 0;">
           <button class="edit-btn" id="edit-link-accounts-btn">Edit/Link Accounts</button>
         </div>
@@ -472,25 +481,61 @@
         </div>
       </div>
     </div>
-    <!-- Link Accounts Interstitial -->
+    <!-- Link Accounts Screen -->
     <div id="link-accounts-screen" style="display:none;">
       <div class="link-accounts-container">
         <div class="link-accounts-title">Link your accounts</div>
         <input class="link-accounts-search" type="text" placeholder="Find my financial provider" />
         <div class="provider-grid">
-          <!-- Openbank as first provider, icon only -->
+          <!-- Openbank with your uploaded logo -->
           <div class="provider-logo" id="openbank-provider">
-            <img src="/image1.png" alt="Openbank" style="max-height:32px;max-width:90px;">
+            <span class="bank-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="10" width="18" height="9" rx="2" fill="#2b6c4b"/>
+                <rect x="1" y="7" width="22" height="3" rx="1.5" fill="#a7cbbf"/>
+                <rect x="7" y="14" width="2" height="3" rx="1" fill="#fff"/>
+                <rect x="11" y="14" width="2" height="3" rx="1" fill="#fff"/>
+                <rect x="15" y="14" width="2" height="3" rx="1" fill="#fff"/>
+              </svg>
+            </span>
+            <img src="/image.png" alt="Openbank" style="max-height:32px;max-width:90px;">
           </div>
-          <div class="provider-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/3/30/American_Express_logo_%282018%29.svg" alt="American Express"></div>
-          <div class="provider-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/1/16/Bank_of_America_logo.svg" alt="Bank of America"></div>
-          <div class="provider-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Capital_One_logo.svg" alt="Capital One"></div>
-          <div class="provider-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/1/1e/Charles_Schwab_Corporation_logo_2021.svg" alt="Charles Schwab"></div>
-          <div class="provider-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JPMorgan_Chase_logo_2008.svg" alt="Chase"></div>
-          <div class="provider-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Citi.svg" alt="Citi"></div>
-          <div class="provider-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/ETrade_logo.svg" alt="E*TRADE"></div>
-          <div class="provider-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Vanguard_Group_logo_2014.svg" alt="Vanguard"></div>
-          <div class="provider-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Wells_Fargo_Bank.svg" alt="Wells Fargo"></div>
+          <!-- American Express -->
+          <div class="provider-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/American_Express_logo_%282018%29.svg" alt="American Express">
+          </div>
+          <!-- Bank of America -->
+          <div class="provider-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/1/16/Bank_of_America_logo.svg" alt="Bank of America">
+          </div>
+          <!-- Capital One -->
+          <div class="provider-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Capital_One_logo.svg" alt="Capital One">
+          </div>
+          <!-- Charles Schwab -->
+          <div class="provider-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/1/1e/Charles_Schwab_Corporation_logo_2021.svg" alt="Charles Schwab">
+          </div>
+          <!-- Chase -->
+          <div class="provider-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JPMorgan_Chase_logo_2008.svg" alt="Chase">
+          </div>
+          <!-- Citi -->
+          <div class="provider-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Citi.svg" alt="Citi">
+          </div>
+          <!-- E*TRADE -->
+          <div class="provider-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/ETrade_logo.svg" alt="E*TRADE">
+          </div>
+          <!-- Vanguard -->
+          <div class="provider-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Vanguard_Group_logo_2014.svg" alt="Vanguard">
+          </div>
+          <!-- Wells Fargo -->
+          <div class="provider-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Wells_Fargo_Bank.svg" alt="Wells Fargo">
+          </div>
         </div>
         <div class="link-accounts-note">
           <svg width="20" height="20" fill="none"><rect width="20" height="20" rx="4" fill="#e0e0e0"/><path d="M10 5v5l3 3" stroke="#666" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -500,7 +545,6 @@
           <b>Add additional assets or liabilities</b><br>
           Certain asset types, such as real estate, and certain liabilities, can't be linked automatically
         </div>
-        <button class="back-btn" id="back-to-main-btn" style="margin-top:24px;">Back</button>
       </div>
     </div>
   </div>
@@ -515,7 +559,6 @@
       document.getElementById('summary-tab').style.display = 'none';
       document.getElementById('fullview-tab').style.display = 'none';
       document.getElementById('link-accounts-screen').style.display = 'none';
-      document.getElementById('main-tabs').style.display = '';
       if (tab === 'summary') {
         document.getElementById('tab-summary').classList.add('active');
         document.getElementById('summary-tab').style.display = 'block';
@@ -524,64 +567,34 @@
         document.getElementById('fullview-tab').style.display = 'block';
       }
     }
-
-    // Show link accounts interstitial on button click, hide main tabs
-    document.addEventListener('DOMContentLoaded', function() {
-      var addBtn = document.getElementById('add-non-fidelity-btn');
-      var linkAccountsScreen = document.getElementById('link-accounts-screen');
-      var mainTabs = document.getElementById('main-tabs');
-      var summaryTab = document.getElementById('summary-tab');
-      var fullviewTab = document.getElementById('fullview-tab');
-      var backBtn = document.getElementById('back-to-main-btn');
-      var openbankProvider = document.getElementById('openbank-provider');
-      if (addBtn && linkAccountsScreen) {
-        addBtn.onclick = function() {
-          if (summaryTab) summaryTab.style.display = 'none';
-          if (fullviewTab) fullviewTab.style.display = 'none';
-          if (mainTabs) mainTabs.style.display = 'none';
-          linkAccountsScreen.style.display = 'block';
-        };
+    // Show link accounts screen when button is clicked
+    document.getElementById('add-non-fidelity-btn').onclick = function() {
+      document.getElementById('summary-tab').style.display = 'none';
+      document.getElementById('fullview-tab').style.display = 'none';
+      document.getElementById('link-accounts-screen').style.display = 'block';
+    };
+    // Plaid Link integration for Openbank
+    document.getElementById('openbank-provider').onclick = async function() {
+      // Get a link_token from your backend
+      const res = await fetch('/api/create_link_token', { method: 'POST' });
+      const data = await res.json();
+      if (!data.link_token) {
+        alert('Could not get Plaid link token');
+        return;
       }
-      if (backBtn && linkAccountsScreen) {
-        backBtn.onclick = function() {
-          linkAccountsScreen.style.display = 'none';
-          if (mainTabs) mainTabs.style.display = '';
-          // Show the fullview tab again
-          if (fullviewTab) {
-            document.getElementById('tab-fullview').classList.add('active');
-            document.getElementById('tab-summary').classList.remove('active');
-            summaryTab.style.display = 'none';
-            fullviewTab.style.display = 'block';
-          }
-        };
-      }
-      // Plaid Link logic for Openbank
-      if (openbankProvider) {
-        openbankProvider.onclick = async function() {
-          try {
-            const res = await fetch('/api/create_link_token', { method: 'POST' });
-            const data = await res.json();
-            if (!data.link_token) {
-              alert('Could not get Plaid link token');
-              return;
-            }
-            const handler = Plaid.create({
-              token: data.link_token,
-              onSuccess: function(public_token, metadata) {
-                alert('Bank linked! (public_token: ' + public_token + ')');
-                // You can now exchange the public_token on the backend
-              },
-              onExit: function(err, metadata) {
-                // Handle exit
-              }
-            });
-            handler.open();
-          } catch (e) {
-            alert('Plaid Link error: ' + e.message);
-          }
-        };
-      }
-    });
+      // Start Plaid Link (customization for Openbank can be set in your backend)
+      const handler = Plaid.create({
+        token: data.link_token,
+        onSuccess: function(public_token, metadata) {
+          alert('Bank linked! (public_token: ' + public_token + ')');
+          // You can now exchange the public_token on the backend
+        },
+        onExit: function(err, metadata) {
+          // Handle exit
+        }
+      });
+      handler.open();
+    };
   </script>
 </body>
 </html>

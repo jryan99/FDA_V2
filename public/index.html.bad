@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fidelity Portfolio Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+  <style>
+    /* Only the modal is styled here for isolation */
+    #fdx-modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.5);
+      justify-content: center; align-items: center;
+    }
+    #fdx-modal-content {
+      background: #fff; padding: 2em; border-radius: 8px; width: 90%; max-width: 800px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      position: relative;
+      overflow-y: auto;
+      max-height: 90vh;
+    }
+    #fdx-modal .close-btn {
+      position: absolute;
+      top: 12px; right: 18px;
+      font-size: 1.5em; cursor: pointer; color: #888;
+    }
+    #fdx-modal .section { margin-bottom: 2em; }
+    #fdx-modal h2 { margin-top: 0; }
+    #fdx-modal table { width: 100%; border-collapse: collapse; margin-bottom: 1em; }
+    #fdx-modal th, #fdx-modal td { border: 1px solid #ccc; padding: 0.5em; text-align: left; }
+    #fdx-modal th { background: #f5f5f5; }
+    #fdx-modal .statements-list a { margin-right: 1em; }
+    #fdx-modal .fdx-modal-title {
+      font-size: 1.3em;
+      font-weight: bold;
+      margin-bottom: 1em;
+      color: #10713f;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-main">
+      <span class="logo">Fidelity</span>
+      <span class="header-link">CUSTOMER SERVICE</span>
+      <span class="header-link">PROFILE</span>
+      <span class="header-link">OPEN AN ACCOUNT</span>
+      <span class="header-link">FIDELITY ASSISTANT</span>
+      <span class="header-link">LOG OUT</span>
+      <input class="header-search" type="text" placeholder="Search or get a quote">
+    </div>
+    <div class="header-sub">
+      <span class="header-link">Accounts & Trade</span>
+      <span class="header-link">Planning & Advice</span>
+      <span class="header-link">News & Research</span>
+      <span class="header-link">Products</span>
+      <span class="header-link">Why Fidelity</span>
+    </div>
+  </div>
+  <div class="main-content">
+    <div class="nav-tabs">
+      <span id="nav-summary" class="tab active">Summary</span>
+      <span id="nav-fullview" class="tab">Full View</span>
+    </div>
+    <div id="summary-panel" class="panel">
+      <div class="accounts-box">
+        <h3>All accounts</h3>
+        <div class="accounts-value">$500,000.00</div>
+        <div class="accounts-breakdown">
+          <div>Investment<br>$500,000.00</div>
+          <div>Retirement<br>$0.00</div>
+          <div>PROFIT SHARING<br>$0.00</div>
+          <div>BrokerageLink<br>$0.00</div>
+        </div>
+      </div>
+      <div class="balance-box">
+        <h3>Balance</h3>
+        <div class="balance-value">$500,000.00</div>
+        <div class="balance-change">+0.00 (0.00%)</div>
+        <div class="balance-bar"></div>
+        <div class="security-message">
+          <strong>Financial scams are on the rise. Add security to your account.</strong>
+          <div>Safer than just a username and password, authenticator apps let you generate a unique code that you can use to log into your account.</div>
+          <a href="#" class="add-security-link">Add security</a>
+        </div>
+      </div>
+    </div>
+    <div id="fullview-panel" class="panel" style="display:none;">
+      <a href="#" class="back-link">&larr; Back to Planning Summary</a>
+      <div class="fullview-tabs">
+        <span class="fullview-tab active">Net Worth</span>
+        <span class="fullview-tab">Spending</span>
+        <span class="fullview-tab">Budget</span>
+        <span class="fullview-tab">Debt</span>
+      </div>
+      <div class="fullview-networth">
+        <div class="networth-value">$500,000.00</div>
+        <div class="networth-date">As of 07/01/2025</div>
+        <div class="networth-change">+0.00 (0.00%) Last 90 days</div>
+      </div>
+      <button class="edit-link-accounts-btn">Edit/Link Accounts</button>
+      <div class="get-complete-picture">
+        <strong>Get a more complete picture</strong>
+        <div>Adding your non-Fidelity accounts can help us provide a more complete assessment of your financial picture.</div>
+        <button class="add-non-fidelity-btn">Add a non-Fidelity account</button>
+      </div>
+    </div>
+    <div class="link-accounts-box">
+      <h2>Link your accounts</h2>
+      <input type="text" class="find-provider-input" placeholder="Find my financial provider">
+      <div class="providers-grid">
+        <div class="provider"><img src="openbank.png" alt="Openbank"><span>Openbank</span></div>
+        <div class="provider"><img src="amex.png" alt="American Express"><span>American Express</span></div>
+        <div class="provider"><img src="bofa.png" alt="Bank of America"><span>Bank of America</span></div>
+        <div class="provider"><img src="capone.png" alt="Capital One"><span>Capital One</span></div>
+        <div class="provider"><img src="schwab.png" alt="Charles Schwab"><span>Charles Schwab</span></div>
+        <div class="provider"><img src="chase.png" alt="Chase"><span>Chase</span></div>
+        <div class="provider"><img src="citi.png" alt="Citi"><span>Citi</span></div>
+        <div class="provider"><img src="etrade.png" alt="E*TRADE"><span>E*TRADE</span></div>
+        <div class="provider"><img src="vanguard.png" alt="Vanguard"><span>Vanguard</span></div>
+        <div class="provider"><img src="wellsfargo.png" alt="Wells Fargo"><span>Wells Fargo</span></div>
+      </div>
+      <div class="emoney-note">
+        <span class="emoney-icon"></span>
+        eMoney uses multi-level encryption to protect your data and credentials
+      </div>
+      <div class="additional-assets-box">
+        <strong>Add additional assets or liabilities</strong>
+        <div>Certain asset types, such as real estate, and certain liabilities, can't be linked automatically</div>
+      </div>
+      <button class="back-btn">Back</button>
+      <button class="plaid-link-btn" id="linkAccountBtn">Link Bank Account</button>
+    </div>
+  </div>
+  <!-- FDX Modal -->
+  <div id="fdx-modal">
+    <div id="fdx-modal-content">
+      <span class="close-btn" id="fdx-close-modal">&times;</span>
+      <div class="fdx-modal-title">Linked Bank Account Details</div>
+      <div id="fdx-customer-section" class="section"></div>
+      <div id="fdx-account-section" class="section"></div>
+      <div id="fdx-transactions-section" class="section"></div>
+      <div id="fdx-statements-section" class="section"></div>
+    </div>
+  </div>
+  <script>
+    // Tab navigation logic for Summary / Full View
+    document.getElementById('nav-summary').onclick = function() {
+      document.getElementById('summary-panel').style.display = '';
+      document.getElementById('fullview-panel').style.display = 'none';
+      this.classList.add('active');
+      document.getElementById('nav-fullview').classList.remove('active');
+    };
+    document.getElementById('nav-fullview').onclick = function() {
+      document.getElementById('summary-panel').style.display = 'none';
+      document.getElementById('fullview-panel').style.display = '';
+      this.classList.add('active');
+      document.getElementById('nav-summary').classList.remove('active');
+    };
+
+    // Plaid Link integration (existing logic, extended)
+    let plaidHandler = null;
+
+    async function createPlaidLinkToken() {
+      const res = await fetch('/api/create_link_token');
+      const data = await res.json();
+      return data.link_token;
+    }
+
+    document.getElementById('linkAccountBtn').onclick = async function() {
+      if (!plaidHandler) {
+        const linkToken = await createPlaidLinkToken();
+        plaidHandler = Plaid.create({
+          token: linkToken,
+          onSuccess: async function(public_token, metadata) {
+            // Exchange public_token for access_token and get account_id
+            const response = await fetch('/api/exchange_public_token', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({ public_token })
+            });
+            const { access_token, account_id } = await response.json();
+            // Show modal and display bank data
+            document.getElementById('fdx-modal').style.display = 'flex';
+            await displayBankData(access_token, account_id);
+          },
+          onExit: function(err, metadata) {
+            if (err != null) {
+              alert('Plaid Link exited with error: ' + err.display_message);
+            }
+          }
+        });
+      }
+      plaidHandler.open();
+    };
+
+    document.getElementById('fdx-close-modal').onclick = function() {
+      document.getElementById('fdx-modal').style.display = 'none';
+      document.getElementById('fdx-customer-section').innerHTML = '';
+      document.getElementById('fdx-account-section').innerHTML = '';
+      document.getElementById('fdx-transactions-section').innerHTML = '';
+      document.getElementById('fdx-statements-section').innerHTML = '';
+    };
+
+    async function displayBankData(accessToken, accountId) {
+      async function fdxFetch(endpoint) {
+        const res = await fetch(endpoint, {
+          headers: { 'Authorization': 'Bearer ' + accessToken }
+        });
+        if (!res.ok) throw new Error('API error: ' + res.status);
+        if (endpoint.includes('/statements/') && !endpoint.endsWith('/statements')) {
+          return res.blob();
+        }
+        return res.json();
+      }
+
+      // 1. Customer Info
+      try {
+        const customer = await fdxFetch('/fdx-api/customers/current');
+        document.getElementById('fdx-customer-section').innerHTML = `
+          <h2>Customer</h2>
+          <table>
+            <tr><th>ID</th><td>${customer.id}</td></tr>
+            <tr><th>Name</th><td>${customer.firstName} ${customer.lastName}</td></tr>
+            <tr><th>Email</th><td>${customer.email || ''}</td></tr>
+          </table>
+        `;
+      } catch {
+        document.getElementById('fdx-customer-section').innerHTML = '<h2>Customer</h2><p>Error loading customer data.</p>';
+      }
+
+      // 2. Account Info
+      try {
+        const account = await fdxFetch(`/fdx-api/accounts/${accountId}`);
+        document.getElementById('fdx-account-section').innerHTML = `
+          <h2>Account</h2>
+          <table>
+            <tr><th>ID</th><td>${account.id}</td></tr>
+            <tr><th>Type</th><td>${account.accountType}</td></tr>
+            <tr><th>Balance</th><td>${account.balance ? account.balance.amount + ' ' + account.balance.currency : ''}</td></tr>
+            <tr><th>Status</th><td>${account.status}</td></tr>
+          </table>
+        `;
+      } catch {
+        document.getElementById('fdx-account-section').innerHTML = '<h2>Account</h2><p>Error loading account data.</p>';
+      }
+
+      // 3. Transactions
+      try {
+        const transactions = await fdxFetch(`/fdx-api/accounts/${accountId}/transactions`);
+        let rows = '';
+        if (transactions && transactions.length > 0) {
+          rows = transactions.map(tx => `
+            <tr>
+              <td>${tx.transactionDate}</td>
+              <td>${tx.description || ''}</td>
+              <td>${tx.amount} ${tx.currency || ''}</td>
+              <td>${tx.type}</td>
+            </tr>
+          `).join('');
+        }
+        document.getElementById('fdx-transactions-section').innerHTML = `
+          <h2>Transactions</h2>
+          <table>
+            <tr><th>Date</th><th>Description</th><th>Amount</th><th>Type</th></tr>
+            ${rows || '<tr><td colspan="4">No transactions found.</td></tr>'}
+          </table>
+        `;
+      } catch {
+        document.getElementById('fdx-transactions-section').innerHTML = '<h2>Transactions</h2><p>Error loading transactions.</p>';
+      }
+
+      // 4. Statements
+      try {
+        const statements = await fdxFetch(`/fdx-api/accounts/${accountId}/statements`);
+        let items = '';
+        if (statements && statements.length > 0) {
+          items = statements.map(st => `
+            <li>
+              <a href="#" onclick="downloadStatement('${accountId}','${st.id}','${accessToken}');return false;">
+                Statement ${st.id} (${st.periodStart} - ${st.periodEnd})
+              </a>
+            </li>
+          `).join('');
+        }
+        document.getElementById('fdx-statements-section').innerHTML = `
+          <h2>Statements</h2>
+          <ul class="statements-list">
+            ${items || '<li>No statements found.</li>'}
+          </ul>
+        `;
+      } catch {
+        document.getElementById('fdx-statements-section').innerHTML = '<h2>Statements</h2><p>Error loading statements.</p>';
+      }
+    }
+
+    // Download statement PDF
+    window.downloadStatement = async function(accountId, statementId, accessToken) {
+      try {
+        const res = await fetch(`/fdx-api/accounts/${accountId}/statements/${statementId}`, {
+          headers: { 'Authorization': 'Bearer ' + accessToken }
+        });
+        if (!res.ok) throw new Error('Failed to download statement');
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `statement-${statementId}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+      } catch (e) {
+        alert('Error downloading statement: ' + e.message);
+      }
+    };
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fidelity Portfolio Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+  <style>
+    /* Modal styles for FDX bank info */
+    #fdx-modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.5);
+      justify-content: center; align-items: center;
+    }
+    #fdx-modal-content {
+      background: #fff; padding: 2em; border-radius: 8px; width: 90%; max-width: 800px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      position: relative;
+      overflow-y: auto;
+      max-height: 90vh;
+    }
+    #fdx-modal .close-btn {
+      position: absolute;
+      top: 12px; right: 18px;
+      font-size: 1.5em; cursor: pointer; color: #888;
+    }
+    #fdx-modal .section { margin-bottom: 2em; }
+    #fdx-modal h2 { margin-top: 0; }
+    #fdx-modal table { width: 100%; border-collapse: collapse; margin-bottom: 1em; }
+    #fdx-modal th, #fdx-modal td { border: 1px solid #ccc; padding: 0.5em; text-align: left; }
+    #fdx-modal th { background: #f5f5f5; }
+    #fdx-modal .statements-list a { margin-right: 1em; }
+    #fdx-modal .fdx-modal-title {
+      font-size: 1.3em;
+      font-weight: bold;
+      margin-bottom: 1em;
+      color: #10713f;
+    }
+  </style>
+</head>
+<body>
+  <!-- ... your original HTML content ... -->
+
+  <!-- FDX Modal -->
+  <div id="fdx-modal">
+    <div id="fdx-modal-content">
+      <span class="close-btn" id="fdx-close-modal">&times;</span>
+      <div class="fdx-modal-title">Linked Bank Account Details</div>
+      <div id="fdx-customer-section" class="section"></div>
+      <div id="fdx-account-section" class="section"></div>
+      <div id="fdx-transactions-section" class="section"></div>
+      <div id="fdx-statements-section" class="section"></div>
+    </div>
+  </div>
+
+  <script>
+    // ... your existing navigation/tab logic ...
+
+    // Plaid Link integration (existing logic, extended)
+    let plaidHandler = null;
+
+    async function createPlaidLinkToken() {
+      const res = await fetch('/api/create_link_token');
+      const data = await res.json();
+      return data.link_token;
+    }
+
+    document.getElementById('linkAccountBtn').onclick = async function() {
+      if (!plaidHandler) {
+        const linkToken = await createPlaidLinkToken();
+        plaidHandler = Plaid.create({
+          token: linkToken,
+          onSuccess: async function(public_token, metadata) {
+            // Exchange public_token for access_token and get account_id
+            const response = await fetch('/api/exchange_public_token', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({ public_token })
+            });
+            const { access_token, account_id } = await response.json();
+            // Show modal and display bank data (using plug customer id for now)
+            document.getElementById('fdx-modal').style.display = 'flex';
+            await displayBankData(access_token, account_id, "customer1");
+          },
+          onExit: function(err, metadata) {
+            if (err != null) {
+              alert('Plaid Link exited with error: ' + err.display_message);
+            }
+          }
+        });
+      }
+      plaidHandler.open();
+    };
+
+    document.getElementById('fdx-close-modal').onclick = function() {
+      document.getElementById('fdx-modal').style.display = 'none';
+      document.getElementById('fdx-customer-section').innerHTML = '';
+      document.getElementById('fdx-account-section').innerHTML = '';
+      document.getElementById('fdx-transactions-section').innerHTML = '';
+      document.getElementById('fdx-statements-section').innerHTML = '';
+    };
+
+    async function displayBankData(accessToken, accountId, customerId) {
+      async function fdxFetch(endpoint) {
+        const res = await fetch(endpoint, {
+          headers: { 'Authorization': 'Bearer ' + accessToken }
+        });
+        if (!res.ok) throw new Error('API error: ' + res.status);
+        if (endpoint.includes('/statements/') && !endpoint.endsWith('/statements')) {
+          return res.blob();
+        }
+        return res.json();
+      }
+
+      // 1. Customer Info
+      try {
+        const customer = await fdxFetch(`/fdx-api/customers/${customerId}`);
+        document.getElementById('fdx-customer-section').innerHTML = `
+          <h2>Customer</h2>
+          <table>
+            <tr><th>ID</th><td>${customer.id}</td></tr>
+            <tr><th>Name</th><td>${customer.firstName} ${customer.lastName}</td></tr>
+            <tr><th>Email</th><td>${customer.email || ''}</td></tr>
+          </table>
+        `;
+      } catch {
+        document.getElementById('fdx-customer-section').innerHTML = '<h2>Customer</h2><p>Error loading customer data.</p>';
+      }
+
+      // 2. Account Info
+      try {
+        const account = await fdxFetch(`/fdx-api/accounts/${accountId}`);
+        document.getElementById('fdx-account-section').innerHTML = `
+          <h2>Account</h2>
+          <table>
+            <tr><th>ID</th><td>${account.id}</td></tr>
+            <tr><th>Type</th><td>${account.accountType}</td></tr>
+            <tr><th>Balance</th><td>${account.balance ? account.balance.amount + ' ' + account.balance.currency : ''}</td></tr>
+            <tr><th>Status</th><td>${account.status}</td></tr>
+          </table>
+        `;
+      } catch {
+        document.getElementById('fdx-account-section').innerHTML = '<h2>Account</h2><p>Error loading account data.</p>';
+      }
+
+      // 3. Transactions
+      try {
+        const transactions = await fdxFetch(`/fdx-api/accounts/${accountId}/transactions`);
+        let rows = '';
+        if (transactions && transactions.length > 0) {
+          rows = transactions.map(tx => `
+            <tr>
+              <td>${tx.transactionDate}</td>
+              <td>${tx.description || ''}</td>
+              <td>${tx.amount} ${tx.currency || ''}</td>
+              <td>${tx.type}</td>
+            </tr>
+          `).join('');
+        }
+        document.getElementById('fdx-transactions-section').innerHTML = `
+          <h2>Transactions</h2>
+          <table>
+            <tr><th>Date</th><th>Description</th><th>Amount</th><th>Type</th></tr>
+            ${rows || '<tr><td colspan="4">No transactions found.</td></tr>'}
+          </table>
+        `;
+      } catch {
+        document.getElementById('fdx-transactions-section').innerHTML = '<h2>Transactions</h2><p>Error loading transactions.</p>';
+      }
+
+      // 4. Statements
+      try {
+        const statements = await fdxFetch(`/fdx-api/accounts/${accountId}/statements`);
+        let items = '';
+        if (statements && statements.length > 0) {
+          items = statements.map(st => `
+            <li>
+              <a href="#" onclick="downloadStatement('${accountId}','${st.id}','${accessToken}');return false;">
+                Statement ${st.id} (${st.periodStart || ''} - ${st.periodEnd || ''})
+              </a>
+            </li>
+          `).join('');
+        }
+        document.getElementById('fdx-statements-section').innerHTML = `
+          <h2>Statements</h2>
+          <ul class="statements-list">
+            ${items || '<li>No statements found.</li>'}
+          </ul>
+        `;
+      } catch {
+        document.getElementById('fdx-statements-section').innerHTML = '<h2>Statements</h2><p>Error loading statements.</p>';
+      }
+    }
+
+    // Download statement PDF
+    window.downloadStatement = async function(accountId, statementId, accessToken) {
+      try {
+        const res = await fetch(`/fdx-api/accounts/${accountId}/statements/${statementId}`, {
+          headers: { 'Authorization': 'Bearer ' + accessToken }
+        });
+        if (!res.ok) throw new Error('Failed to download statement');
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `statement-${statementId}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+      } catch (e) {
+        alert('Error downloading statement: ' + e.message);
+      }
+    };
+  </script>
+</body>
+</html>
+
