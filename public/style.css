@@ -451,12 +451,6 @@ body {
   }
 }
 
-
-
-
-
-
-
 /* Responsive adjustments */
 @media (max-width: 900px) {
   .main-content {
@@ -472,4 +466,3 @@ body {
     padding: 1em;
   }
 }
-
