@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fidelity Portfolio Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Plaid Link JS -->
+  <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Top Navigation -->
+  <div class="topnav">
+    <div class="logo">Fidelity</div>
+    <div class="nav-links">
+      <span>CUSTOMER SERVICE</span>
+      <span>PROFILE</span>
+      <span>OPEN AN ACCOUNT</span>
+      <span>FIDELITY ASSISTANT</span>
+      <span>LOG OUT</span>
+    </div>
+    <div class="search">
+      <input type="text" placeholder="Search or get a quote" aria-label="Search">
+    </div>
+  </div>
+
+  <!-- Secondary Navigation -->
+  <div class="secnav">
+    <span>Accounts & Trade</span>
+    <span>Planning & Advice</span>
+    <span>News & Research</span>
+    <span>Products</span>
+    <span>Why Fidelity</span>
+  </div>
+
+  <!-- Main Container -->
+  <div class="container">
+
+    <!-- Tabs -->
+    <div class="tabs" id="main-tabs">
+      <button class="tab active" id="tab-summary" onclick="showTab('summary')">Summary</button>
+      <button class="tab" id="tab-fullview" onclick="showTab('fullview')">Full View</button>
+    </div>
+
+    <!-- Summary Tab Content -->
+    <div id="summary-tab" class="tab-content">
+      <!-- ... existing summary markup ... -->
+    </div>
+
+    <!-- Full View Tab Content -->
+    <div id="fullview-tab" class="tab-content" style="display:none;">
+      <!-- ... existing full view markup ... -->
+      <button class="edit-btn" id="edit-link-accounts-btn">Edit/Link Accounts</button>
+      <button class="add-btn" id="add-non-fidelity-btn">Add a non-Fidelity account</button>
+    </div>
+
+    <!-- Link Accounts Interstitial -->
+    <div id="link-accounts-screen" style="display:none;">
+      <div class="link-accounts-container">
+        <!-- ... providers grid ... -->
+        <button class="back-btn" id="back-to-main-btn">Back</button>
+      </div>
+    </div>
+
+  </div> <!-- END OF .container -->
+
+  <!-- Bank Data Overlay (Global Modal) -->
+  <div id="bank-data-overlay" style="display:none;
+                                     position:fixed;
+                                     top:0; left:0;
+                                     width:100%; height:100%;
+                                     background:rgba(0,0,0,0.7);
+                                     z-index:1000;
+                                     padding:2rem;
+                                     color:#fff;">
+    <h2>Linked Bank Accounts</h2>
+    <div id="bank-data-table"></div>
+    <button id="close-overlay-btn">Close</button>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    Fidelity Brokerage Services LLC, Member NYSE, SIPC. &copy; 2025 Fidelity Investments.
+  </footer>
+
+  <!-- Main JavaScript -->
+  <script src="main.js" defer></script>
+</body>
+</html>
+

@@ -62,11 +62,17 @@ body {
   background: var(--fidelity-green-dark);
   font-size: 1em;
 }
-
 .main-content {
   max-width: 1200px;
-  margin: 2em auto;
-  padding: 0 2em;
+  margin: 2em 0 2em 2em;   /* Remove 'auto', add left margin only */
+  background: #fff;
+  padding: 2em;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  width: auto;
+  min-width: 0;
+  box-sizing: border-box;
+  text-align: left;
 }
 
 .nav-tabs {

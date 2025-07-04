@@ -1,0 +1,30 @@
+
+  // Function to display bank data in overlay
+  window.displayBankData = (accessToken, accountId, customerId) => {
+    fetch(`/api/get_bank_data?accountId=${accountId}&customerId=${customerId}`)
+      .then(r => r.json())
+      .then(data => {
+        const table = document.createElement('table');
+        table.innerHTML = `<tr><th>Account</th><th>Balance</th><th>Type</th></tr>`;
+        data.accounts.forEach(acct => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${acct.accountNumber}</td><td>${acct.balance}</td><td>${acct.type}</td>`;
+          table.appendChild(tr);
+        });
+        document.getElementById('bank-data-table').innerHTML = '';
+        document.getElementById('bank-data-table').appendChild(table);
+        bankOverlay.style.display = 'block';
+      })
+      .catch(e => alert('Fetch error: ' + e.message));
+  };
+
+  // Close overlay button
+  if (closeOverlayBtn) {
+    closeOverlayBtn.onclick = () => {
+      bankOverlay.style.display = 'none';
+    };
+  }
+});
+  </script>
+</body>
+</html>

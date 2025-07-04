@@ -1,0 +1,192 @@
+// main.js
+
+// Tab Switching Logic
+function showTab(tab) {
+  document.querySelectorAll('.tab').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
+  const linkScreen = document.getElementById('link-accounts-screen');
+  if (linkScreen) linkScreen.style.display = 'none';
+  const mainTabs = document.getElementById('main-tabs');
+  if (mainTabs) mainTabs.style.display = '';
+  if (tab === 'summary') {
+    const tabSummary = document.getElementById('tab-summary');
+    const summaryTab = document.getElementById('summary-tab');
+    if (tabSummary) tabSummary.classList.add('active');
+    if (summaryTab) summaryTab.style.display = 'block';
+  } else {
+    const tabFullview = document.getElementById('tab-fullview');
+    const fullviewTab = document.getElementById('fullview-tab');
+    if (tabFullview) tabFullview.classList.add('active');
+    if (fullviewTab) fullviewTab.style.display = 'block';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Element references
+  const addBtn = document.getElementById('add-non-fidelity-btn');
+  const backBtn = document.getElementById('back-to-main-btn');
+  const linkScreen = document.getElementById('link-accounts-screen');
+  const mainTabs = document.getElementById('main-tabs');
+  const summaryTab = document.getElementById('summary-tab');
+  const fullviewTab = document.getElementById('fullview-tab');
+  const openbankProvider = document.getElementById('openbank-provider');
+  const bankOverlay = document.getElementById('bank-data-overlay');
+
+  // Show Link Accounts Screen
+  if (addBtn) {
+    addBtn.onclick = () => {
+      summaryTab.style.display = 'none';
+      fullviewTab.style.display = 'none';
+      mainTabs.style.display = 'none';
+      linkScreen.style.display = 'block';
+    };
+  }
+
+  // Back to Main Tabs
+  if (backBtn) {
+    backBtn.onclick = () => {
+      linkScreen.style.display = 'none';
+      mainTabs.style.display = '';
+      showTab('fullview');
+    };
+  }
+
+  // Plaid Link Handler
+  if (openbankProvider) {
+    openbankProvider.onclick = async () => {
+      try {
+        const res = await fetch('/api/create_link_token', { method: 'POST' });
+        const data = await res.json();
+        if (!data.link_token) throw new Error('No link token');
+        const handler = Plaid.create({
+          token: data.link_token,
+          onSuccess: (public_token, metadata) => {
+            // Use customer_id = 1 as constant
+            displayBankData('ACCESS_TOKEN', 'ACCOUNT_ID', 1);
+          }
+        });
+        handler.open();
+      } catch (err) {
+        alert('Plaid Link error: ' + err.message);
+      }
+    };
+  }
+
+  // Display Bank Data in Overlay (calls FDX API endpoints)
+  window.displayBankData = async (accessToken, accountId, customerId) => {
+    const overlay = document.getElementById('bank-data-overlay');
+    if (!overlay) return;
+
+    // Show loading indicator
+    overlay.innerHTML = '<div style="padding:2em;font-size:1.2em;">Loading bank data...</div>';
+    overlay.style.display = 'block';
+
+    try {
+      // Fetch all FDX data in parallel
+      const [contactRes, accountsRes, transactionsRes, statementsRes] = await Promise.all([
+        fetch(`/api/openbank/customer/${customerId}`),
+        fetch(`/api/openbank/accounts?customerId=${customerId}`),
+        fetch(`/api/openbank/transactions?customerId=${customerId}`),
+        fetch(`/api/openbank/statements?customerId=${customerId}`)
+      ]);
+
+      const contact = await contactRes.json();
+      const accounts = (await accountsRes.json()).accounts || [];
+      const transactions = (await transactionsRes.json()).transactions || [];
+      const statements = (await statementsRes.json()).statements || [];
+
+      // Build HTML tables
+      let html = `<h2>Contact</h2>
+        <table>
+          <tr><th>Name</th><td>${contact.first_name || ''} ${contact.last_name || ''}</td></tr>
+          <tr><th>Email</th><td>${contact.email || ''}</td></tr>
+          <tr><th>Phone</th><td>${contact.phone || ''}</td></tr>
+          <tr><th>Address</th><td>${contact.address || ''}</td></tr>
+        </table>`;
+
+      html += `<h2>Accounts</h2>
+        <table>
+          <tr>
+            <th>ID</th>
+            <th>Type</th>
+            <th>Balance</th>
+            <th>Status</th>
+          </tr>`;
+      if (accounts.length) {
+        html += accounts.map(a => `
+          <tr>
+            <td>${a.account_id}</td>
+            <td>${a.account_type || ''}</td>
+            <td>${a.balance || ''}</td>
+            <td>${a.status || ''}</td>
+          </tr>
+        `).join('');
+      } else {
+        html += `<tr><td colspan="4">No accounts found.</td></tr>`;
+      }
+      html += `</table>`;
+
+      html += `<h2>Transactions</h2>
+        <table>
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Type</th>
+          </tr>`;
+      if (transactions.length) {
+        html += transactions.map(t => `
+          <tr>
+            <td>${t.date || ''}</td>
+            <td>${t.description || ''}</td>
+            <td>${t.amount || ''}</td>
+            <td>${t.type || ''}</td>
+          </tr>
+        `).join('');
+      } else {
+        html += `<tr><td colspan="4">No transactions found.</td></tr>`;
+      }
+      html += `</table>`;
+
+      html += `<h2>Statements</h2>
+        <table>
+          <tr>
+            <th>ID</th>
+            <th>Period Start</th>
+            <th>Period End</th>
+          </tr>`;
+      if (statements.length) {
+        html += statements.map(s => `
+          <tr>
+            <td>${s.statement_id || ''}</td>
+            <td>${s.period_start || ''}</td>
+            <td>${s.period_end || ''}</td>
+          </tr>
+        `).join('');
+      } else {
+        html += `<tr><td colspan="3">No statements found.</td></tr>`;
+      }
+      html += `</table>`;
+
+      html += `<button id="close-overlay-btn" style="margin-top:2em;">Close</button>`;
+
+      overlay.innerHTML = html;
+
+      // Add close handler
+      document.getElementById('close-overlay-btn').onclick = () => {
+        overlay.style.display = 'none';
+        overlay.innerHTML = '';
+      };
+
+    } catch (err) {
+      overlay.innerHTML = `<div style="color:red;padding:2em;">Failed to load bank data: ${err.message}</div>
+        <button id="close-overlay-btn" style="margin-top:2em;">Close</button>`;
+      document.getElementById('close-overlay-btn').onclick = () => {
+        overlay.style.display = 'none';
+        overlay.innerHTML = '';
+      };
+    }
+  };
+
+});
+

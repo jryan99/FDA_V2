@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fidelity Portfolio Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f5f6fa;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 950px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px #0001;
+      padding: 2em;
+    }
+    .header {
+      font-size: 2.2em;
+      font-weight: bold;
+      margin-bottom: 0.2em;
+      letter-spacing: 1px;
+    }
+    .nav-row {
+      font-size: 1.1em;
+      margin-bottom: 0.5em;
+    }
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid #e0e0e0;
+      margin-bottom: 2em;
+      gap: 1em;
+    }
+    .tab {
+      padding: 1em 2em;
+      cursor: pointer;
+      background: #e8f5e9;
+      color: #217a38;
+      border: none;
+      border-radius: 12px 12px 0 0;
+      font-size: 1.1em;
+      transition: background 0.2s;
+      outline: none;
+    }
+    .tab.active {
+      background: #217a38;
+      color: #fff;
+      font-weight: bold;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .accounts-box, .balance-box {
+      background: #f8f9fa;
+      border-radius: 10px;
+      box-shadow: 0 1px 4px #0001;
+      padding: 1.5em;
+      margin-bottom: 1.5em;
+    }
+    .accounts-value, .balance-value {
+      font-size: 2em;
+      font-weight: bold;
+      margin: 0.5em 0;
+    }
+    .accounts-breakdown {
+      display: flex;
+      gap: 2em;
+      margin-top: 1em;
+      font-size: 1em;
+      font-weight: 600;
+    }
+    .balance-bar {
+      height: 10px;
+      background: #d0f5e9;
+      border-radius: 5px;
+      margin: 1em 0;
+    }
+    .security-message {
+      background: #eaf8f0;
+      padding: 0.7em;
+      border-radius: 6px;
+      margin-top: 1em;
+      font-size: 0.95em;
+    }
+    .networth-row {
+      display: flex;
+      gap: 2em;
+      margin-bottom: 2em;
+      flex-wrap: wrap;
+    }
+    .networth-main {
+      flex: 2 1 350px;
+    }
+    .networth-side {
+      flex: 1 1 200px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 1.2em;
+      min-width: 220px;
+      max-width: 320px;
+    }
+    .networth-tabs {
+      display: flex;
+      gap: 1em;
+      margin-bottom: 1em;
+    }
+    .networth-tab {
+      background: #e8f5e9;
+      color: #217a38;
+      border: none;
+      border-radius: 8px 8px 0 0;
+      padding: 0.5em 1.5em;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 1em;
+      margin-right: 0.2em;
+    }
+    .networth-tab.active {
+      background: #217a38;
+      color: #fff;
+      font-weight: bold;
+    }
+    .networth-value {
+      font-size: 2em;
+      font-weight: bold;
+      margin: 0.5em 0;
+    }
+    .networth-date, .networth-change {
+      font-size: 1em;
+      color: #555;
+    }
+    .edit-btn, .add-btn {
+      background: #217a38;
+      color: #fff;
+      border: none;
+      padding: 0.7em 2em;
+      border-radius: 6px;
+      font-size: 1em;
+      margin: 1em 0.5em 0 0;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .edit-btn:hover, .add-btn:hover {
+      background: #145a27;
+    }
+    .footer {
+      text-align: center;
+      color: #888;
+      font-size: 0.95em;
+      margin-top: 3em;
+      margin-bottom: 1em;
+    }
+    .search input {
+      width: 220px;
+      padding: 0.45em 0.8em;
+      border-radius: 6px;
+      border: 1px solid #bbb;
+      font-size: 1em;
+      margin-bottom: 0.3em;
+    }
+  </style>
+  <script>
+    function showTab(tabName) {
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+      document.getElementById(tabName + '-tab').classList.add('active');
+      document.getElementById('tab-' + tabName).classList.add('active');
+    }
+    window.onload = function() {
+      showTab('summary');
+    };
+  </script>
+</head>
+<body>
+  <div class="container">
+
+//insert here
+<div class="header">
+  <div class="header-main">
+    <span class="logo">Fidelity</span>
+    <span class="header-link">CUSTOMER SERVICE</span>
+    <span class="header-link">PROFILE</span>
+    <span class="header-link">OPEN AN ACCOUNT</span>
+    <span class="header-link">FIDELITY ASSISTANT</span>
+    <span class="header-link">LOG OUT</span>
+    <input class="header-search" type="text" id="search-quote" name="search-quote" placeholder="Search or get a quote" aria-label="Search or get a quote">
+  </div>
+  <div class="header-sub">
+    <span class="header-link">Accounts & Trade</span>
+    <span class="header-link">Planning & Advice</span>
+    <span class="header-link">News & Research</span>
+    <span class="header-link">Products</span>
+    <span class="header-link">Why Fidelity</span>
+  </div>
+</div>
+<div class="main-content">
+  <div class="nav-tabs">
+    <span class="tab active">Summary</span>
+    <span class="tab">Full View</span>
+  </div>
+  <div class="dashboard-row">
+    <div class="accounts-box card">
+      <div class="card-title">All accounts</div>
+      <div class="accounts-value">$500,000.00</div>
+      <div class="accounts-breakdown">
+        <div>Investment<br>$500,000.00</div>
+        <div>Retirement<br>$0.00</div>
+        <div>PROFIT SHARING<br>$0.00</div>
+        <div>BrokerageLink<br>$0.00</div>
+      </div>
+    </div>
+    <div class="balance-box card">
+      <div class="card-title">Balance</div>
+      <div class="balance-value">$500,000.00 <span class="balance-change">+0.00 (0.00%)</span></div>
+      <div class="balance-bar"></div>
+      <div class="security-message">
+        <strong>Financial scams are on the rise. Add security to your account.</strong>
+        <div>Safer than just a username and password, authenticator apps let you generate a unique code that you can use to log into your account.</div>
+        <a href="#" class="add-security-link">Add security</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    Fidelity Brokerage Services LLC, Member NYSE, SIPC. © 2025 Fidelity Investments.
+  </div>
+</div>
+
+    <!-- Full View Tab Content -->
+    <div id="fullview-tab" class="tab-content">
+      <div class="networth-row">
+        <div class="networth-main">
+          <a href="#" style="color:var(--accent-blue);text-decoration:none;font-size:1rem;display:inline-block;margin-bottom:16px;">&#8592; Back to Planning Summary</a>
+          <div class="networth-tabs">
+            <button class="networth-tab active">Net Worth</button>
+            <button class="networth-tab">Spending</button>
+            <button class="networth-tab">Budget</button>
+            <button class="networth-tab">Debt</button>
+          </div>
+          <div class="networth-value">$500,000.00 <span title="info" style="font-size:1.2rem;color:#888;cursor:pointer;">&#9432;</span></div>
+          <div class="networth-date">As of 07/01/2025</div>
+          <div class="networth-change">+0.00 (0.00%) Last 90 days</div>
+          <hr style="margin:28px 0 18px 0;">
+          <button class="edit-btn" id="edit-link-accounts-btn">Edit/Link Accounts</button>
+        </div>
+        <div class="networth-side">
+          <div style="font-weight:700;font-size:1.1rem;margin-bottom:10px;">Get a more complete picture</div>
+          <div style="font-size:1rem;margin-bottom:18px;">
+            Adding your non-Fidelity accounts can help us provide a more complete assessment of your financial picture.
+          </div>
+          <button class="add-btn" id="add-non-fidelity-btn">Add a non-Fidelity account</button>
+        </div>
+      </div>
+      <!-- You can add overlays or FDX data here as needed -->
+    </div>
+
+    <div class="footer">
+      Fidelity Brokerage Services LLC, Member NYSE, SIPC. © 2025 Fidelity Investments.
+    </div>
+  </div>
+</body>
+</html>
+

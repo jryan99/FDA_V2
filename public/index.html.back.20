@@ -1,0 +1,66 @@
+    <!-- Summary Tab -->
+    <div id="summary-tab" style="display:block;">
+      <div class="dashboard-main">
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <div class="sidebar-title">All accounts</div>
+          <div class="sidebar-balance">$500,000.00</div>
+          <div class="sidebar-section">
+            <div class="label">Investment</div>
+            <div class="value">$500,000.00</div>
+            <div class="label" style="margin-top:8px;">Retirement</div>
+            <div class="value">$0.00</div>
+          </div>
+          <div class="sidebar-section">
+            <div class="label">PROFIT SHARING</div>
+            <div class="value">$0.00</div>
+            <div class="label">BrokerageLink</div>
+            <div class="value">$0.00</div>
+          </div>
+        </div>
+        <!-- Main Content Area -->
+        <div class="main-content">
+          <div class="card">
+            <div class="card-title">Balance</div>
+            <div class="balance-section">
+              <span class="balance-amount">$500,000.00</span>
+              <span class="balance-change">+0.00 (0.00%)</span>
+            </div>
+            <div class="balance-chart">
+              <div class="placeholder-chart"></div>
+            </div>
+            <div class="info-card">
+              <b>Financial scams are on the rise. Add security to your account.</b><br>
+              Safer than just a username and password, authenticator apps let you generate a unique code that you can use to log into your account.<br>
+              <a href="#">Add security</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Full View Tab -->
+    <div id="fullview-tab" style="display:none;">
+      <div class="networth-row">
+        <div class="networth-main">
+          <a href="#" style="color:var(--accent-blue);text-decoration:none;font-size:1rem;display:inline-block;margin-bottom:16px;">&#8592; Back to Planning Summary</a>
+          <div class="networth-tabs">
+            <button class="networth-tab active">Net Worth</button>
+            <button class="networth-tab">Spending</button>
+            <button class="networth-tab">Budget</button>
+            <button class="networth-tab">Debt</button>
+          </div>
+          <div class="networth-value">$500,000.00 <span title="info" style="font-size:1.2rem;color:#888;cursor:pointer;">&#9432;</span></div>
+          <div class="networth-date">As of 07/01/2025</div>
+          <div class="networth-change">+0.00 (0.00%) Last 90 days</div>
+          <hr style="margin:28px 0 18px 0;">
+          <button class="edit-btn" id="edit-link-accounts-btn">Edit/Link Accounts</button>
+        </div>
+        <div class="networth-side">
+          <div style="font-weight:700;font-size:1.1rem;margin-bottom:10px;">Get a more complete picture</div>
+          <div style="font-size:1rem;margin-bottom:18px;">
+            Adding your non-Fidelity accounts can help us provide a more complete assessment of your financial picture.
+          </div>
+          <button class="add-btn" id="add-non-fidelity-btn">Add a non-Fidelity account</button>
+        </div>
+      </div>
+    </div>

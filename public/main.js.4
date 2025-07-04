@@ -1,0 +1,95 @@
+// main.js
+
+// Tab Switching Logic
+function showTab(tab) {
+  document.querySelectorAll('.tab').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
+  document.getElementById('link-accounts-screen').style.display = 'none';
+  document.getElementById('main-tabs').style.display = '';
+  if (tab === 'summary') {
+    document.getElementById('tab-summary').classList.add('active');
+    document.getElementById('summary-tab').style.display = 'block';
+  } else {
+    document.getElementById('tab-fullview').classList.add('active');
+    document.getElementById('fullview-tab').style.display = 'block';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Element references
+  const addBtn = document.getElementById('add-non-fidelity-btn');
+  const backBtn = document.getElementById('back-to-main-btn');
+  const linkScreen = document.getElementById('link-accounts-screen');
+  const mainTabs = document.getElementById('main-tabs');
+  const summaryTab = document.getElementById('summary-tab');
+  const fullviewTab = document.getElementById('fullview-tab');
+  const openbankProvider = document.getElementById('openbank-provider');
+  const bankOverlay = document.getElementById('bank-data-overlay');
+  const closeOverlayBtn = document.getElementById('close-overlay-btn');
+
+  // Show Link Accounts Screen
+  if (addBtn) {
+    addBtn.onclick = () => {
+      summaryTab.style.display = 'none';
+      fullviewTab.style.display = 'none';
+      mainTabs.style.display = 'none';
+      linkScreen.style.display = 'block';
+    };
+  }
+
+  // Back to Main Tabs
+  if (backBtn) {
+    backBtn.onclick = () => {
+      linkScreen.style.display = 'none';
+      mainTabs.style.display = '';
+      showTab('fullview');
+    };
+  }
+
+  // Plaid Link Handler
+  if (openbankProvider) {
+    openbankProvider.onclick = async () => {
+      try {
+        const res = await fetch('/api/create_link_token', { method: 'POST' });
+        const data = await res.json();
+        if (!data.link_token) throw new Error('No link token');
+        const handler = Plaid.create({
+          token: data.link_token,
+          onSuccess: (public_token, metadata) => {
+            // Replace with your actual access_token/account_id logic
+            displayBankData('ACCESS_TOKEN', 'ACCOUNT_ID', metadata.institution.id);
+          }
+        });
+        handler.open();
+      } catch (err) {
+        alert('Plaid Link error: ' + err.message);
+      }
+    };
+  }
+
+  // Display Bank Data in Overlay (example, update as needed)
+  window.displayBankData = (accessToken, accountId, customerId) => {
+    fetch(`/api/get_bank_data?accountId=${accountId}&customerId=${customerId}`)
+      .then(r => r.json())
+      .then(data => {
+        const table = document.createElement('table');
+        table.innerHTML = `
+          <tr><th>Account</th><td>${data.accountName || ''}</td></tr>
+          <tr><th>Balance</th><td>${data.balance || ''}</td></tr>
+          <tr><th>Status</th><td>${data.status || ''}</td></tr>
+        `;
+        bankOverlay.innerHTML = '';
+        bankOverlay.appendChild(table);
+        bankOverlay.style.display = 'block';
+      });
+  };
+
+  // Overlay close handler (if you have a close button)
+  if (closeOverlayBtn && bankOverlay) {
+    closeOverlayBtn.onclick = () => {
+      bankOverlay.style.display = 'none';
+      bankOverlay.innerHTML = '';
+    };
+  }
+});
+
