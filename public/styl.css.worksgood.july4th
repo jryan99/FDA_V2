@@ -1,0 +1,468 @@
+:root {
+  --fidelity-green: #10713f;
+  --fidelity-green-dark: #0b5e34;
+  --fidelity-gray: #f5f5fa;
+  --fidelity-border: #dee2e6;
+  --fidelity-text: #222;
+  --accent-blue: #1a2dab;
+  --accent-red: #c00;
+}
+
+/* Reset and base styles */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--fidelity-gray);
+  color: var(--fidelity-text);
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  min-width: 320px;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* Header and nav */
+.header {
+  background: var(--fidelity-green);
+  color: #fff;
+  font-size: 1.1em;
+  font-weight: bold;
+  letter-spacing: 1px;
+  width: 100vw;
+  min-width: 100vw;
+  left: 0;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.header-main {
+  display: flex;
+  align-items: center;
+  gap: 2em;
+  padding: 0.8em 2em 0.2em 2em;
+}
+
+.logo {
+  font-size: 2.2em;
+  font-weight: 900;
+  letter-spacing: 2px;
+  margin-right: 2em;
+}
+
+.header-link {
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 1em;
+  margin-right: 1.5em;
+  white-space: nowrap;
+}
+
+.header-search {
+  margin-left: auto;
+  border-radius: 5px;
+  border: none;
+  padding: 0.3em 0.7em;
+  font-size: 1em;
+  max-width: 180px;
+}
+
+.header-sub {
+  display: flex;
+  gap: 2em;
+  padding: 0.3em 2em 0.6em 2em;
+  background: var(--fidelity-green-dark);
+  font-size: 1em;
+  width: 100vw;
+  min-width: 100vw;
+  box-sizing: border-box;
+}
+
+/* Main content */
+.main-content {
+  max-width: 1200px;
+  margin: 2em 0 2em 2em; /* Left-aligned */
+  background: #fff;
+  padding: 2em;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  width: auto;
+  min-width: 0;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+/* Tabs */
+.nav-tabs {
+  display: flex;
+  gap: 2em;
+  margin-bottom: 1.5em;
+  border-bottom: 2px solid var(--fidelity-border);
+}
+
+.tab {
+  padding: 0.7em 2em 0.7em 0.2em;
+  background: transparent;
+  border: none;
+  border-bottom: 4px solid transparent;
+  color: var(--fidelity-green-dark);
+  font-weight: bold;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: border 0.2s, color 0.2s;
+}
+
+.tab.active {
+  border-bottom: 4px solid var(--fidelity-green);
+  color: var(--fidelity-green);
+}
+
+/* Card row */
+.dashboard-row, .panel {
+  display: flex;
+  gap: 2em;
+  margin-bottom: 2em;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.accounts-box, .balance-box {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px #0001;
+  padding: 2em 2em 1.5em 2em;
+  min-width: 320px;
+  flex: 1 1 340px;
+  max-width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.accounts-box h3, .balance-box h3,
+.card-title {
+  color: var(--fidelity-green);
+  margin-top: 0;
+  margin-bottom: 0.7em;
+  font-size: 1.2em;
+  font-weight: 700;
+}
+
+.accounts-value, .balance-value {
+  font-size: 2em;
+  font-weight: 900;
+  margin: 0.2em 0 0.7em 0;
+}
+
+.accounts-breakdown {
+  margin-top: 1em;
+  font-size: 1em;
+  font-weight: 500;
+  color: #444;
+  display: flex;
+  gap: 2em;
+}
+
+.balance-change {
+  color: var(--fidelity-green);
+  font-weight: 700;
+  margin-left: 1em;
+  font-size: 1em;
+}
+
+.balance-bar {
+  height: 32px;
+  width: 100%;
+  background: repeating-linear-gradient(
+    90deg, #eaf8f0, #eaf8f0 10px, #d9f2e6 10px, #d9f2e6 20px
+  );
+  border-radius: 8px;
+  margin: 1em 0;
+}
+
+.security-message {
+  background: #f8faf8;
+  border: 1px solid var(--fidelity-border);
+  border-radius: 8px;
+  padding: 1em;
+  margin-top: 0.8em;
+  font-size: 1em;
+}
+
+.security-message strong {
+  display: block;
+  margin-bottom: 0.3em;
+}
+
+.add-security-link {
+  color: var(--fidelity-green);
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.footer {
+  text-align: center;
+  color: #888;
+  font-size: 0.95em;
+  margin-top: 3em;
+  margin-bottom: 1em;
+}
+
+.networth-row {
+  display: flex;
+  gap: 2em;
+  margin-bottom: 2em;
+  flex-wrap: wrap;
+}
+
+.networth-main {
+  flex: 2 1 350px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px #0001;
+  padding: 2em;
+  margin-bottom: 1em;
+}
+
+.networth-side {
+  flex: 1 1 200px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px #0001;
+  padding: 2em;
+  min-width: 220px;
+  max-width: 320px;
+  margin-bottom: 1em;
+}
+
+.networth-tabs {
+  display: flex;
+  gap: 1em;
+  margin-bottom: 1em;
+}
+
+.networth-tab {
+  background: #e8f5e9;
+  color: #217a38;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  padding: 0.5em 1.5em;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 1em;
+  margin-right: 0.2em;
+  transition: background 0.2s;
+}
+.networth-tab.active {
+  background: #217a38;
+  color: #fff;
+  font-weight: bold;
+}
+
+.link-accounts-container {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px #0001;
+  padding: 2em;
+  max-width: 600px;
+  margin: 2em auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.link-accounts-title {
+  font-size: 1.3em;
+  font-weight: bold;
+  margin-bottom: 1em;
+  color: #10713f;
+}
+
+.link-accounts-search {
+  width: 80%;
+  padding: 0.7em;
+  margin-bottom: 1.5em;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+  font-size: 1em;
+}
+
+.provider-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  justify-content: center;
+  margin-bottom: 1.5em;
+}
+
+.provider-logo {
+  background: #f5f6fa;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px #0001;
+  padding: 0.8em 1.2em;
+  margin: 0.5em;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 90px;
+  min-height: 40px;
+}
+.provider-logo:hover {
+  box-shadow: 0 2px 12px #0002;
+  background: #e8f5e9;
+}
+
+.link-accounts-note {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  font-size: 0.98em;
+  color: #555;
+  margin: 1em 0 0.5em 0;
+}
+
+.link-accounts-additional {
+  background: #f8faf8;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1em;
+  margin-top: 1em;
+  font-size: 0.98em;
+  text-align: center;
+}
+
+.edit-btn, .add-btn, .back-btn {
+  background: #217a38;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 12px;
+  margin-right: 12px;
+  transition: background 0.2s;
+  display: inline-block;
+}
+.edit-btn:hover, .add-btn:hover, .back-btn:hover {
+  background: #145a27;
+}
+
+.fdx-modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+}
+
+.fdx-modal-content {
+  background: white;
+  width: 90%;
+  max-width: 900px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 12px;
+  padding: 1.5em 2em;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  position: relative;
+  font-family: Arial, sans-serif;
+}
+
+.fdx-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: #555;
+}
+
+.fdx-modal-tabs {
+  display: flex;
+  gap: 1em;
+  margin-bottom: 1em;
+}
+
+.fdx-tab {
+  padding: 0.5em 1.2em;
+  background: #e8f5e9;
+  color: #10713f;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.fdx-tab.active {
+  background: #10713f;
+  color: white;
+}
+
+.fdx-tab-content {
+  display: none;
+}
+
+.fdx-tab-content.active {
+  display: block;
+}
+
+.fdx-tab-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5em;
+}
+
+.fdx-tab-content th, .fdx-tab-content td {
+  border: 1px solid #ccc;
+  padding: 0.5em 0.8em;
+  text-align: left;
+}
+
+.fdx-tab-content th {
+  background: #f0f8f0;
+  color: #10713f;
+  font-weight: 700;
+}
+
+
+/* Responsive for mobile */
+@media (max-width: 900px) {
+  .networth-row {
+    flex-direction: column;
+    gap: 1em;
+  }
+  .networth-main, .networth-side, .link-accounts-container {
+    min-width: 0;
+    width: 100%;
+    padding: 1em;
+  }
+  .provider-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .main-content {
+    padding: 1em;
+  }
+  .dashboard-row, .panel {
+    flex-direction: column;
+    gap: 1em;
+  }
+  .accounts-box, .balance-box {
+    min-width: 0;
+    width: 100%;
+    padding: 1em;
+  }
+}
