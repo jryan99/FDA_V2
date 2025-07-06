@@ -5,11 +5,11 @@
   <title>Fidelity Portfolio Demo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css">
-  <!-- Plaid Link SDK (if needed) -->
+  <!-- Plaid Link SDK -->
   <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
 </head>
 <body>
-  <!-- Header and nav (add your actual nav markup here if needed) -->
+  <!-- Header and nav -->
   <div class="header">
     <div class="header-main">
       <span class="logo">Fidelity</span>
@@ -62,93 +62,118 @@
     </div>
   </div>
 
-    <!-- Full View Tab -->
-    <div id="fullview-tab" style="display:none;">
-      <div class="networth-row">
-        <div class="networth-main">
-          <a href="#" style="color:var(--accent-blue);text-decoration:none;font-size:1rem;display:inline-block;margin-bottom:16px;">&#8592; Back to Planning Summary</a>
-          <div class="networth-tabs">
-            <button class="networth-tab active">Net Worth</button>
-            <button class="networth-tab">Spending</button>
-            <button class="networth-tab">Budget</button>
-            <button class="networth-tab">Debt</button>
-          </div>
-          <div class="networth-value">$500,000.00 <span title="info" style="font-size:1.2rem;color:#888;cursor:pointer;">&#9432;</span></div>
-          <div class="networth-date">As of 07/01/2025</div>
-          <div class="networth-change">+0.00 (0.00%) Last 90 days</div>
-          <hr style="margin:28px 0 18px 0;">
-          <button class="edit-btn" id="edit-link-accounts-btn">Edit/Link Accounts</button>
-        </div>
-        <div class="networth-side">
-          <div style="font-weight:700;font-size:1.1rem;margin-bottom:10px;">Get a more complete picture</div>
-          <div style="font-size:1rem;margin-bottom:18px;">
+  <!-- Full View Tab -->
+  <div id="fullview-tab" style="display:none;">
+    <div class="networth-container">
+      <a href="#" style="color:var(--accent-blue);text-decoration:none;font-size:1rem;display:inline-block;margin-bottom:16px;">&#8592; Back to Planning Summary</a>
+      
+      <div class="networth-tabs">
+        <button class="networth-tab active">Net Worth</button>
+        <button class="networth-tab">Spending</button>
+        <button class="networth-tab">Budget</button>
+        <button class="networth-tab">Debt</button>
+      </div>
+      
+      <div class="networth-main-section">
+        <div class="networth-value-display">$500,000.00</div>
+        <div class="networth-date">As of January 7, 2025</div>
+        <div class="networth-change-display">+$0.00 (0.00%) Last 90 days</div>
+      </div>
+      
+      <hr class="networth-divider">
+      
+      <!-- Get a more complete picture section moved here -->
+      <div class="complete-picture-inline">
+        <div class="complete-picture-content">
+          <h3>Get a more complete picture</h3>
+          <div class="complete-picture-description">
             Adding your non-Fidelity accounts can help us provide a more complete assessment of your financial picture.
           </div>
           <button class="add-btn" id="add-non-fidelity-btn">Add a non-Fidelity account</button>
         </div>
       </div>
     </div>
-    <!-- Link Accounts Interstitial -->
-    <div id="link-accounts-screen" style="display:none;">
-      <div class="link-accounts-container">
-        <div class="link-accounts-title">Link your accounts</div>
-        <input class="link-accounts-search" type="text" placeholder="Find my financial provider" />
-        <div class="provider-grid">
-          <!-- Openbank as first provider, icon only -->
-          <div class="provider-logo" id="openbank-provider">
-            <img src="/image1.png" alt="Openbank" style="max-height:32px;max-width:90px;">
-          </div>
-          <div class="provider-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/3/30/American_Express_logo_%282018%29.svg" alt="American Express"></div>
-          <div class="provider-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/1/16/Bank_of_America_logo.svg" alt="Bank of America"></div>
-          <div class="provider-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Capital_One_logo.svg" alt="Capital One"></div>
-          <div class="provider-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/1/1e/Charles_Schwab_Corporation_logo_2021.svg" alt="Charles Schwab"></div>
-          <div class="provider-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JPMorgan_Chase_logo_2008.svg" alt="Chase"></div>
-          <div class="provider-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Citi.svg" alt="Citi"></div>
-          <div class="provider-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/ETrade_logo.svg" alt="E*TRADE"></div>
-          <div class="provider-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Vanguard_Group_logo_2014.svg" alt="Vanguard"></div>
-          <div class="provider-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Wells_Fargo_Bank.svg" alt="Wells Fargo"></div>
-        </div>
-        <div class="link-accounts-note">
-          <svg width="20" height="20" fill="none"><rect width="20" height="20" rx="4" fill="#e0e0e0"/><path d="M10 5v5l3 3" stroke="#666" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span>eMoney uses multi-level encryption to protect your data and credentials</span>
-        </div>
-        <div class="link-accounts-additional">
-          <b>Add additional assets or liabilities</b><br>
-          Certain asset types, such as real estate, and certain liabilities, can't be linked automatically
-        </div>
-        <button class="back-btn" id="back-to-main-btn" style="margin-top:24px;">Back</button>
-      </div>
-    </div>
   </div>
 
-  <!-- Link Accounts Interstitial/Screen -->
+  <!-- Link Accounts Interstitial -->
   <div id="link-accounts-screen" style="display:none;">
-    <!-- Add your linking UI here -->
-    <button class="back-btn" id="back-to-main-btn">Back</button>
-  </div>
-
-  <!-- Overlay for bank data (optional, for Plaid/FDX integration) -->
-  <div id="bank-data-overlay" style="display:none;">
-    <button id="close-overlay-btn">Close</button>
-    <!-- Table or data will be injected here -->
-  </div>
-
-<!-- Modal Overlay for Bank Data -->
-<div id="fdx-modal" class="fdx-modal" style="display:none;">
-  <div class="fdx-modal-content">
-    <span id="fdx-close-modal" class="fdx-close-btn">&times;</span>
-    <div class="fdx-modal-tabs">
-      <button class="fdx-tab active" data-tab="contact">Contact</button>
-      <button class="fdx-tab" data-tab="accounts">Accounts</button>
-      <button class="fdx-tab" data-tab="transactions">Transactions</button>
-      <button class="fdx-tab" data-tab="statements">Statements</button>
+    <div class="link-accounts-container">
+      <div class="link-accounts-title">Link your accounts</div>
+      <input class="link-accounts-search" type="text" placeholder="Find my financial provider" />
+      <div class="provider-grid">
+        <!-- Openbank as first provider, no bank icon -->
+        <div class="provider-logo" id="openbank-provider">
+          <img src="/image1.png" alt="Openbank">
+        </div>
+        <!-- Row 1 -->
+        <div class="provider-logo">
+          <div class="bank-icon">🏦</div>
+          <div class="bank-name">American Express</div>
+        </div>
+        <div class="provider-logo">
+          <div class="bank-icon">🏦</div>
+          <div class="bank-name">Bank of America</div>
+        </div>
+        <!-- Row 2 -->
+        <div class="provider-logo">
+          <div class="bank-icon">🏦</div>
+          <div class="bank-name">Capital One</div>
+        </div>
+        <div class="provider-logo">
+          <div class="bank-icon">🏦</div>
+          <div class="bank-name">Charles Schwab</div>
+        </div>
+        <div class="provider-logo">
+          <div class="bank-icon">🏦</div>
+          <div class="bank-name">Chase</div>
+        </div>
+        <!-- Row 3 -->
+        <div class="provider-logo">
+          <div class="bank-icon">🏦</div>
+          <div class="bank-name">Citi</div>
+        </div>
+        <div class="provider-logo">
+          <div class="bank-icon">🏦</div>
+          <div class="bank-name">E*TRADE</div>
+        </div>
+        <div class="provider-logo">
+          <div class="bank-icon">🏦</div>
+          <div class="bank-name">Vanguard</div>
+        </div>
+        <!-- Row 4 -->
+        <div class="provider-logo">
+          <div class="bank-icon">🏦</div>
+          <div class="bank-name">Wells Fargo</div>
+        </div>
+      </div>
+      <div class="link-accounts-note">
+        <svg width="20" height="20" fill="none"><rect width="20" height="20" rx="4" fill="#e0e0e0"/><path d="M10 5v5l3 3" stroke="#666" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>eMoney uses multi-level encryption to protect your data and credentials</span>
+      </div>
+      <div class="link-accounts-additional">
+        <b>Add additional assets or liabilities</b><br>
+        Certain asset types, such as real estate, and certain liabilities, can't be linked automatically
+      </div>
+      <button class="back-btn" id="back-to-main-btn" style="margin-top:24px;">Back</button>
     </div>
-    <div id="fdx-tab-contact" class="fdx-tab-content active"></div>
-    <div id="fdx-tab-accounts" class="fdx-tab-content"></div>
-    <div id="fdx-tab-transactions" class="fdx-tab-content"></div>
-    <div id="fdx-tab-statements" class="fdx-tab-content"></div>
   </div>
-</div>
+
+  <!-- Modal Overlay for Bank Data -->
+  <div id="fdx-modal" class="fdx-modal" style="display:none;">
+    <div class="fdx-modal-content">
+      <span id="fdx-close-modal" class="fdx-close-btn">&times;</span>
+      <div class="fdx-modal-tabs">
+        <button class="fdx-tab active" data-tab="contact">Contact</button>
+        <button class="fdx-tab" data-tab="accounts">Accounts</button>
+        <button class="fdx-tab" data-tab="transactions">Transactions</button>
+        <button class="fdx-tab" data-tab="statements">Statements</button>
+      </div>
+      <div id="fdx-tab-contact" class="fdx-tab-content active"></div>
+      <div id="fdx-tab-accounts" class="fdx-tab-content"></div>
+      <div id="fdx-tab-transactions" class="fdx-tab-content"></div>
+      <div id="fdx-tab-statements" class="fdx-tab-content"></div>
+    </div>
+  </div>
 
   <!-- Main JS -->
   <script src="main.js"></script>

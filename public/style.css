@@ -209,6 +209,102 @@ body {
   margin-bottom: 1em;
 }
 
+/* Net Worth Section - Professional Styling */
+.networth-container {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  padding: 2.5em;
+  margin: 2em auto;
+  max-width: 800px;
+}
+
+.networth-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 2em;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.networth-tab {
+  background: transparent;
+  color: #666;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 1em 2em;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.networth-tab.active {
+  background: transparent;
+  color: #000;
+  border-bottom: 3px solid var(--fidelity-green);
+  font-weight: 700;
+}
+
+.networth-tab:hover:not(.active) {
+  color: #333;
+  background: #f8f9fa;
+}
+
+.networth-main-section {
+  text-align: left;
+  margin-bottom: 2em;
+}
+
+.networth-value-display {
+  font-size: 3.5em;
+  font-weight: 900;
+  color: #000;
+  margin: 0.5em 0 0.3em 0;
+  letter-spacing: -1px;
+}
+
+.networth-date {
+  font-size: 1rem;
+  color: #666;
+  font-weight: 500;
+  margin-bottom: 0.5em;
+}
+
+.networth-change-display {
+  font-size: 1.1rem;
+  color: var(--fidelity-green);
+  font-weight: 600;
+}
+
+.networth-divider {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 2em 0;
+}
+
+/* Complete Picture Section - Inline */
+.complete-picture-inline {
+  background: #f8faf8;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 2em;
+  margin-top: 1.5em;
+}
+
+.complete-picture-content h3 {
+  color: #000;
+  font-size: 1.4em;
+  font-weight: 700;
+  margin: 0 0 1em 0;
+}
+
+.complete-picture-description {
+  color: #444;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 1.5em;
+}
+
 .networth-row {
   display: flex;
   gap: 2em;
@@ -236,28 +332,29 @@ body {
   margin-bottom: 1em;
 }
 
-.networth-tabs {
+/* Complete picture section - centered */
+.complete-picture-section {
   display: flex;
-  gap: 1em;
-  margin-bottom: 1em;
+  justify-content: center;
+  margin: 2em 0;
 }
 
-.networth-tab {
-  background: #e8f5e9;
-  color: #217a38;
-  border: none;
-  border-radius: 8px 8px 0 0;
-  padding: 0.5em 1.5em;
-  font-weight: 500;
-  cursor: pointer;
-  font-size: 1em;
-  margin-right: 0.2em;
-  transition: background 0.2s;
+.complete-picture-box {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px #0001;
+  padding: 2em;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
 }
-.networth-tab.active {
-  background: #217a38;
-  color: #fff;
-  font-weight: bold;
+
+.complete-picture-box h3 {
+  color: var(--fidelity-green);
+  margin-top: 0;
+  margin-bottom: 0.7em;
+  font-size: 1.3em;
+  font-weight: 700;
 }
 
 .link-accounts-container {
@@ -289,11 +386,13 @@ body {
 }
 
 .provider-grid {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 1em;
   justify-content: center;
   margin-bottom: 1.5em;
+  width: 100%;
+  max-width: 500px;
 }
 
 .provider-logo {
@@ -301,18 +400,52 @@ body {
   border-radius: 10px;
   box-shadow: 0 1px 4px #0001;
   padding: 0.8em 1.2em;
-  margin: 0.5em;
   cursor: pointer;
   transition: box-shadow 0.2s;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   min-width: 90px;
-  min-height: 40px;
+  min-height: 60px;
+  position: relative;
+  text-align: center;
 }
+
 .provider-logo:hover {
   box-shadow: 0 2px 12px #0002;
   background: #e8f5e9;
+}
+
+.provider-logo img {
+  max-height: 32px;
+  max-width: 90px;
+  object-fit: contain;
+}
+
+.bank-icon {
+  font-size: 1.2em;
+  margin-bottom: 0.3em;
+  opacity: 0.7;
+}
+
+.bank-name {
+  font-size: 0.85em;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* Special styling for Openbank - no bank icon or name */
+#openbank-provider .bank-icon,
+#openbank-provider .bank-name {
+  display: none;
+}
+
+#openbank-provider {
+  justify-content: center;
+  align-items: center;
 }
 
 .link-accounts-note {
@@ -433,21 +566,22 @@ body {
   font-weight: 700;
 }
 
-
 /* Responsive for mobile */
 @media (max-width: 900px) {
   .networth-row {
     flex-direction: column;
     gap: 1em;
   }
-  .networth-main, .networth-side, .link-accounts-container {
+  .networth-main, .networth-side, .link-accounts-container, .complete-picture-box, .networth-container {
     min-width: 0;
     width: 100%;
     padding: 1em;
   }
   .provider-grid {
-    flex-direction: column;
-    align-items: center;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .networth-value-display {
+    font-size: 2.5em;
   }
 }
 
@@ -464,5 +598,11 @@ body {
     min-width: 0;
     width: 100%;
     padding: 1em;
+  }
+}
+
+@media (max-width: 600px) {
+  .provider-grid {
+    grid-template-columns: 1fr;
   }
 }

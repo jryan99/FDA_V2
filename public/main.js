@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const fullviewTab = document.getElementById('fullview-tab');
   const openbankProvider = document.getElementById('openbank-provider');
 
-  // Modal overlay references (must be present in your HTML)
+  // Modal overlay references
   const modal = document.getElementById('fdx-modal');
   const closeBtn = document.getElementById('fdx-close-modal');
   const tabs = modal ? modal.querySelectorAll('.fdx-tab') : [];
@@ -56,23 +56,64 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 
-  // Plaid Link Handler
+  // Enhanced Plaid Link Handler for Openbank
   if (openbankProvider) {
     openbankProvider.onclick = async () => {
+      console.log('Openbank provider clicked');
       try {
-        const res = await fetch('/api/create_link_token', { method: 'POST' });
+        // Check if Plaid is available
+        if (typeof Plaid === 'undefined') {
+          console.error('Plaid SDK not loaded');
+          alert('Plaid SDK not available. Please check your internet connection and reload the page.');
+          return;
+        }
+
+        console.log('Creating Plaid link token...');
+        const res = await fetch('/api/create_link_token', { 
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error('Server error:', res.status, errorText);
+          throw new Error(`Server error: ${res.status} - ${errorText}`);
+        }
+        
         const data = await res.json();
-        if (!data.link_token) throw new Error('No link token');
+        console.log('Link token response:', data);
+        
+        if (!data.link_token) {
+          throw new Error('No link token received from server');
+        }
+
+        console.log('Initializing Plaid Link...');
         const handler = Plaid.create({
           token: data.link_token,
           onSuccess: (public_token, metadata) => {
+            console.log('Plaid Link success:', { public_token, metadata });
             // Use customer_id = 1 as constant for demo
             displayBankData('ACCESS_TOKEN', 'ACCOUNT_ID', 1);
+          },
+          onExit: (err, metadata) => {
+            console.log('Plaid Link exit:', { err, metadata });
+            if (err) {
+              console.error('Plaid Link error:', err);
+            }
+          },
+          onEvent: (eventName, metadata) => {
+            console.log('Plaid Link event:', eventName, metadata);
           }
         });
+        
+        console.log('Opening Plaid Link...');
         handler.open();
+        
       } catch (err) {
-        alert('Plaid Link error: ' + err.message);
+        console.error('Plaid Link error:', err);
+        alert('Error connecting to bank: ' + err.message + '\n\nPlease check:\n1. Your internet connection\n2. That the server is running\n3. Your Plaid credentials are configured');
       }
     };
   }
@@ -132,24 +173,25 @@ document.addEventListener('DOMContentLoaded', () => {
         <table>
           <tr><th>Name</th><td>${contact.first_name || ''} ${contact.last_name || ''}</td></tr>
           <tr><th>Email</th><td>${contact.email || ''}</td></tr>
-          <tr><th>Phone</th><td>${contact.phone || ''}</td></tr>
-          <tr><th>Address</th><td>${contact.address || ''}</td></tr>
+          <tr><th>Customer ID</th><td>${contact.customer_id || ''}</td></tr>
+          <tr><th>Created</th><td>${contact.created_at || ''}</td></tr>
         </table>`;
 
       // Build Accounts Table
       if (accountsEl) accountsEl.innerHTML = `
         <table>
           <thead>
-            <tr><th>ID</th><th>Type</th><th>Balance</th><th>Status</th></tr>
+            <tr><th>Account ID</th><th>Type</th><th>Number</th><th>Balance</th><th>Status</th></tr>
           </thead>
           <tbody>
             ${accounts.length ? accounts.map(a => `
               <tr>
                 <td>${a.account_id}</td>
                 <td>${a.account_type || ''}</td>
-                <td>${a.balance || ''}</td>
+                <td>${a.account_number || ''}</td>
+                <td>$${a.balance || '0.00'}</td>
                 <td>${a.status || ''}</td>
-              </tr>`).join('') : '<tr><td colspan="4">No accounts found.</td></tr>'}
+              </tr>`).join('') : '<tr><td colspan="5">No accounts found.</td></tr>'}
           </tbody>
         </table>`;
 
@@ -157,16 +199,17 @@ document.addEventListener('DOMContentLoaded', () => {
       if (transactionsEl) transactionsEl.innerHTML = `
         <table>
           <thead>
-            <tr><th>Date</th><th>Description</th><th>Amount</th><th>Type</th></tr>
+            <tr><th>Transaction ID</th><th>Date</th><th>Description</th><th>Amount</th><th>Currency</th></tr>
           </thead>
           <tbody>
             ${transactions.length ? transactions.map(t => `
               <tr>
-                <td>${t.date || ''}</td>
+                <td>${t.transaction_id || ''}</td>
+                <td>${t.posted_timestamp || ''}</td>
                 <td>${t.description || ''}</td>
-                <td>${t.amount || ''}</td>
-                <td>${t.type || ''}</td>
-              </tr>`).join('') : '<tr><td colspan="4">No transactions found.</td></tr>'}
+                <td>$${t.amount || '0.00'}</td>
+                <td>${t.currency || 'USD'}</td>
+              </tr>`).join('') : '<tr><td colspan="5">No transactions found.</td></tr>'}
           </tbody>
         </table>`;
 
@@ -174,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (statementsEl) statementsEl.innerHTML = `
         <table>
           <thead>
-            <tr><th>ID</th><th>Period Start</th><th>Period End</th></tr>
+            <tr><th>Statement ID</th><th>Period Start</th><th>Period End</th><th>URL</th></tr>
           </thead>
           <tbody>
             ${statements.length ? statements.map(s => `
@@ -182,15 +225,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${s.statement_id || ''}</td>
                 <td>${s.period_start || ''}</td>
                 <td>${s.period_end || ''}</td>
-              </tr>`).join('') : '<tr><td colspan="3">No statements found.</td></tr>'}
+                <td><a href="${s.statement_url || '#'}" target="_blank">View</a></td>
+              </tr>`).join('') : '<tr><td colspan="4">No statements found.</td></tr>'}
           </tbody>
         </table>`;
 
     } catch (err) {
+      console.error('Error loading bank data:', err);
       [contactEl, accountsEl, transactionsEl, statementsEl].forEach(el => {
         if (el) el.innerHTML = `<p style="color:red;">Failed to load data: ${err.message}</p>`;
       });
     }
   };
 });
-
